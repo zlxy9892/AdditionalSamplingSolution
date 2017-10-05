@@ -255,6 +255,7 @@ vector<EnvUnit*> Processing::FindBestNewSampleListByObj(int newSampleCount)
 
 		Utility::WriteCSV("./addSamples.csv", this->SampleEnvUnits);
 	}
+	return this->SampleEnvUnits;
 }
 
 void Processing::ShowInfo(int iter)
