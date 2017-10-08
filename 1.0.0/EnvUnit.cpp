@@ -4,7 +4,7 @@ EnvUnit::EnvUnit(void)
 {
 	this->IsCal = true;
 	this->Loc = new Location();
-	this->Uncertainty = 1;
+	this->Uncertainty = 1.0;
 	this->MaxSimi = 0;
 	this->CellSize = 10;
 	this->isCanPredict = false;

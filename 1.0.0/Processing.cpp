@@ -12,6 +12,7 @@ Processing::Processing(EnvDataset *envDataset, vector<EnvUnit *> sampleEnvUnits)
 	this->unc_thred = 0.2;
 	this->w1 = 1.0;
 	this->w1 = 0.0;
+	this->p_factor = 1.0;
 }
 
 Processing::Processing(EnvDataset *envDataset)
@@ -20,6 +21,7 @@ Processing::Processing(EnvDataset *envDataset)
 	this->unc_thred = 0.2;
 	this->w1 = 1.0;
 	this->w1 = 0.0;
+	this->p_factor = 1.0;
 }
 
 Processing::~Processing(void)
@@ -194,7 +196,8 @@ void Processing::UpdateWeights()
 {
 	double canPreArea = this->CalcCanPredictArea(this->unc_thred);
 	double totalArea = this->EDS->CalcArea;
-	this->w1 = 1.0 - 1.0 * canPreArea / totalArea;
+	double cannotPredRatio = 1.0 - 1.0 * canPreArea / totalArea;
+	this->w1 = pow(cannotPredRatio, this->p_factor);
 	this->w2 = 1 - this->w1;
 }
 
@@ -247,12 +250,12 @@ vector<EnvUnit*> Processing::FindBestNewSampleListByObj(int newSampleCount)
 {
 	for (int i = 0; i < newSampleCount; i++)
 	{
-		EnvUnit *bestSample = this->FindBestNewSampleByObj();
-		this->SampleEnvUnits.push_back(bestSample);
 		this->RefreshUncertainty();
 		this->UpdateWeights();
+		EnvUnit *bestSample = this->FindBestNewSampleByObj();
+		this->SampleEnvUnits.push_back(bestSample);
+		
 		this->ShowInfo(i);
-
 		Utility::WriteCSV("./addSamples.csv", this->SampleEnvUnits);
 	}
 	return this->SampleEnvUnits;

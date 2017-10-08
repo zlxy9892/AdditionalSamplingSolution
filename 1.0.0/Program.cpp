@@ -45,17 +45,19 @@ int main(int argc, char *argv[])
 	cout<<"\nLoading data ...";
 	GDALAllRegister();
 	EnvDataset *envDataset = new EnvDataset();
-	//string dataDir = "../data/raffelson/";
+	string dataDir = "../data/raffelson/";
+	LoadData_raffelson(dataDir, envDataset);
 	//string dataDir = "../data/heshan/";
-	string dataDir = "../data/xc/";
-	//LoadData_raffelson(dataDir, envDataset);
 	//LoadData_heshan(dataDir, envDataset);
-	LoadData_xc(dataDir, envDataset);
+	//string dataDir = "../data/xc/";	
+	//LoadData_xc(dataDir, envDataset);
 	cout<<"\nRead data OK!\n";
 	string sampleFname = "../data/raffelson/addSamples.csv";
 
 	// 开始进行地理处理
 	Processing *processing = new Processing(envDataset);
+	processing->unc_thred = 0.2;
+	processing->p_factor = 1.0;
 
 	processing->FindBestNewSampleListByObj(30);
 	Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);

@@ -15,6 +15,7 @@
 #include "EnvDataset.h"
 #include "Utility.h"
 #include <omp.h>
+#include <math.h>
 
 
 using namespace std;
@@ -25,8 +26,9 @@ public:
 	EnvDataset *EDS;
 	vector<EnvUnit *> SampleEnvUnits;
 	double unc_thred;
-	double w1;	// 权重1：不可推测面积比例
-	double w2;	// 权重2：1-w1
+	double w1;			// 权重1：不可推测面积比例
+	double w2;			// 权重2：1-w1
+	double p_factor;	// 指数因子
 
 public:
 	Processing(void);
