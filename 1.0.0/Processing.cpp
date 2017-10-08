@@ -274,6 +274,7 @@ void Processing::ShowInfo(int iter)
 	//Utility::ShowEnvUnit(this->SampleEnvUnits);
 	cout<<"sample size:\t"<<this->SampleEnvUnits.size()<<"\n";
 	cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
+	cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
 	cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
 	cout<<"O1:\t"<<o1<<"\n";
 	cout<<"O2:\t"<<o2<<"\n";
@@ -302,13 +303,15 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		double o1 = 1.0 - 1.0 * canPreArea / totalArea;
 		double o2 = 1.0 * unc_sum / totalArea;
 
-		//cout<<"\n-------------------------------------\n";
+		cout<<"\n-------------------------------------\n";
+		cout<<"iteration:\t"<<i+1<<"\n";
 		//Utility::ShowEnvUnit(this->SampleEnvUnits);
-		//cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
-		//cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
-		//cout<<"O1:\t"<<o1<<"\n";
-		//cout<<"O2:\t"<<o2<<"\n";
-		//cout<<"W1:\t"<<this->w1<<"\n";
+		cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
+		cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
+		cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
+		cout<<"O1:\t"<<o1<<"\n";
+		cout<<"O2:\t"<<o2<<"\n";
+		cout<<"W1:\t"<<this->w1<<"\n";
 		cout<<"W2:\t"<<this->w2<<"\n";
 	}
 }

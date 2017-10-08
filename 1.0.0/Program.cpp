@@ -59,8 +59,21 @@ int main(int argc, char *argv[])
 	processing->unc_thred = 0.2;
 	processing->p_factor = 1.0;
 
-	processing->FindBestNewSampleListByObj(30);
-	Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+	// set different power factor of W1 (the ratio of the area can be predicted)
+	for(double p_factor = 0.5; p_factor < 1.6; p_factor+=0.1)
+	{
+		cout<<"\n-------------------p_factor: "<<p_factor<<"--------------------\n";
+		processing->SampleEnvUnits.clear();
+		processing->p_factor = p_factor;
+		processing->FindBestNewSampleListByObj(30);
+		string outfilename = "./addSamples_" + Utility::ConvertToString(p_factor) + ".csv";
+		cout<<"\n--------------------------------------------\n";
+	}
+
+	//processing->FindBestNewSampleListByObj(30);
+	//Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+
+	//processing->ShowProcessInfo("../data/raffelson/addSamples.csv");
 
 	// final handle
 	delete processing;
