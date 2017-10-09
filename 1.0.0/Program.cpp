@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
 		processing->p_factor = p_factor;
 		processing->FindBestNewSampleListByObj(30);
 		string outfilename = "./addSamples_" + Utility::ConvertToString(p_factor) + ".csv";
+		Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
 		cout<<"\n--------------------------------------------\n";
 	}
 

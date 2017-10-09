@@ -304,7 +304,6 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		double o2 = 1.0 * unc_sum / totalArea;
 
 		cout<<"\n-------------------------------------\n";
-		cout<<"iteration:\t"<<i+1<<"\n";
 		//Utility::ShowEnvUnit(this->SampleEnvUnits);
 		cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
 		cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
