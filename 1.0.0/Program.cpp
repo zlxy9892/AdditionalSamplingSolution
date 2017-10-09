@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 	Processing *processing = new Processing(envDataset);
 	processing->unc_thred = 0.2;
 	processing->p_factor = 1.0;
+	int maxSampleNumber = 30;
 
 	// set different power factor of W1 (the ratio of the area can be predicted)
 	for(double p_factor = 0.5; p_factor < 1.6; p_factor+=0.1)
@@ -65,9 +66,9 @@ int main(int argc, char *argv[])
 		cout<<"\n-------------------p_factor: "<<p_factor<<"--------------------\n";
 		processing->SampleEnvUnits.clear();
 		processing->p_factor = p_factor;
-		processing->FindBestNewSampleListByObj(30);
+		processing->FindBestNewSampleListByObj(maxSampleNumber);
 		string outfilename = "./addSamples_" + Utility::ConvertToString(p_factor) + ".csv";
-		Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+		Utility::WriteCSV(outfilename, processing->SampleEnvUnits);
 		cout<<"\n--------------------------------------------\n";
 	}
 
