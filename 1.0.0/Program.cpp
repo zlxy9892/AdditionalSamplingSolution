@@ -54,28 +54,36 @@ int main(int argc, char *argv[])
 	cout<<"\nRead data OK!\n";
 	string sampleFname = "../data/raffelson/addSamples.csv";
 
-	// 开始进行地理处理
+	// set the hyperparameters
 	Processing *processing = new Processing(envDataset);
-	processing->unc_thred = 0.2;
-	processing->p_factor = 1.0;
-	int maxSampleNumber = 30;
+	processing->unc_thred_max = 0.4;
+	processing->unc_thred_min = 0.1;
+	processing->unc_thred = 0.4;
+	processing->p_factor = 100.0;
+	processing->imporve_factor = 100.0;
+	int maxSampleNumber = 20;
+	processing->ShowParameters();
+
+	processing->FindBestNewSampleListByObj(maxSampleNumber);
+	Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
 
 	// set different power factor of W1 (the ratio of the area can be predicted)
-	for(double p_factor = 0.5; p_factor < 1.6; p_factor+=0.1)
-	{
-		cout<<"\n-------------------p_factor: "<<p_factor<<"--------------------\n";
-		processing->SampleEnvUnits.clear();
-		processing->p_factor = p_factor;
-		processing->FindBestNewSampleListByObj(maxSampleNumber);
-		string outfilename = "./addSamples_" + Utility::ConvertToString(p_factor) + ".csv";
-		Utility::WriteCSV(outfilename, processing->SampleEnvUnits);
-		cout<<"\n--------------------------------------------\n";
-	}
+	//processing->GetSampleListByDifferentPowerFactor(maxSampleNumber, 0.5, 1.5, 0.1);
 
-	//processing->FindBestNewSampleListByObj(30);
-	//Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+	// set different power factor and improve factor
+	//processing->GetSampleListByDifferentPowerFactorAndImproveFactor(maxSampleNumber, 0.2, 2.0, 0.2, 0.2, 2.0, 0.2);
+	//processing->ShowSampleListInfoByDifferentPowerFactorAndImproveFactor(maxSampleNumber, "../data/raffelson/samples_pfactor_ifactor/", "addSamples_", 0.2, 2.0, 0.2, 0.2, 2.0, 0.2);
 
-	//processing->ShowProcessInfo("../data/raffelson/addSamples.csv");
+	//processing->ShowProcessInfo("../data/raffelson/samples_thred_max/addSamples_0.4.csv");
+
+	//Utility::WriteEnvDataCSV("envData_raf.csv", envDataset->EnvUnits);
+
+	// read samples by kmeans algorithm
+	/*vector<EnvUnit *> samples_kmeans = Utility::ReadCSV("../data/raffelson/samples_kmeans/samples_kmeans_30.csv", processing->EDS);
+	processing->SampleEnvUnits = samples_kmeans;
+	processing->RefreshUncertainty();
+	cout<<processing->CalcUncertainty_Sum();*/
+
 
 	// final handle
 	delete processing;

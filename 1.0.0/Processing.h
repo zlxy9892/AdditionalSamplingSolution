@@ -25,10 +25,13 @@ class Processing
 public:
 	EnvDataset *EDS;
 	vector<EnvUnit *> SampleEnvUnits;
+	double unc_thred_max;
+	double unc_thred_min;
 	double unc_thred;
 	double w1;			// 权重1：不可推测面积比例
 	double w2;			// 权重2：1-w1
 	double p_factor;	// 指数因子
+	double imporve_factor;	// 激进率
 
 public:
 	Processing(void);
@@ -44,14 +47,25 @@ public:
 	void RefreshUncertainty(vector<EnvUnit *> samples);									// 更新每个待推测点的不确定性
 	void RefreshUncertainty();															// 更新每个待推测点的不确定性
 	void RefreshUncertainty_Parallel();													// 更新每个待推测点的不确定性
+	void RefreshIsCanPredict();															// 更新每个点是否可被推测（每个点的推测不确定性是否低于最低不确定性阈值 unc_thred_min）
 	double ObjectFunction();															// 计算目标函数
 	double ObjectFunctionByNewSample(EnvUnit *newSample);								// 计算目标函数
 	EnvUnit* FindBestNewSampleByObj();
 	vector<EnvUnit*> FindBestNewSampleListByObj(int newSampleCount);
+	void UpdateUncertaintyThred();
 	void UpdateWeights();
 
+	// ----------- for test ------------ //
+	void GetSampleListByDifferentPowerFactor(int newSampleCount, double pfactor_min, double pfactor_max, double pfactor_step);
+	void GetSampleListByDifferentPowerFactorAndImproveFactor(int newSampleCount, double pfactor_min, double pfactor_max, double pfactor_step, double ifactor_min, double ifactor_max, double ifactor_step);
+	void ShowSampleListInfoByDifferentPowerFactorAndImproveFactor(int newSampleCount, string dir, string prefix, double pfactor_min, double pfactor_max, double pfactor_step, double ifactor_min, double ifactor_max, double ifactor_step);
+	// ----------- for test ------------ //
+
+	// ----------- show info ------------ //
 	void ShowInfo(int iter=0);
 	void ShowProcessInfo(string sampleFilename);
+	void ShowParameters();
+	// ----------- show info ------------ //
 };
 
 #endif 

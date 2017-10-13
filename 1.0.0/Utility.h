@@ -31,6 +31,7 @@ public:
 	static void WriteCSV(string filename, vector<EnvUnit *> envUnits);
 	static void WriteCSV2(string filename, vector<EnvUnit *> envUnits, vector<int> predictedAreaList);
 	static void WriteCSV_Temp(string filename, vector<EnvUnit *> envUnits);
+	static void WriteEnvDataCSV(string filename, vector<EnvUnit *> envUnits);
 	static void ShowEnvUnit(vector<EnvUnit *> envUnits);
 
 	static EnvUnit* GetOneRandomEnvUnit(vector<EnvUnit *> envUnits);		// 获取一个随机的环境单元(栅格)

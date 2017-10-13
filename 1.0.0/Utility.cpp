@@ -249,6 +249,38 @@ void Utility::WriteCSV_Temp( string filename, vector<EnvUnit *> envUnits )
 	file.close();
 }
 
+void Utility::WriteEnvDataCSV( string filename, vector<EnvUnit *> envUnits )
+{
+	if(envUnits.size() <= 0)
+	{
+		return;
+	}
+	ofstream file(filename);
+	string firstLine = "x,y,env1,env2...\n";
+	file<<firstLine;
+
+	double cellSize = envUnits[0]->CellSize;
+	for(int i = 0; i < envUnits.size(); i++)
+	{
+		string line = "";
+		EnvUnit *e = envUnits[i];
+		double x = e->Loc->X + cellSize / 2;
+		double y = e->Loc->Y - cellSize / 2;
+		string xstr = Utility::ConvertToString(x);
+		string ystr = Utility::ConvertToString(y);
+		line += xstr + "," + ystr;
+		for (int j = 0; j < e->EnvValues.size(); j++)
+		{
+			double envVal = e->EnvValues[j];
+			line += "," + Utility::ConvertToString(envVal);
+		}
+		line += "\n";
+		file<<line;
+	}
+	file.flush();
+	file.close();
+}
+
 void Utility::ShowEnvUnit( vector<EnvUnit *> envUnits )
 {
 	if(envUnits.empty() || envUnits.size() <= 0)

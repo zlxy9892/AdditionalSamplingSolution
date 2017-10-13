@@ -9,19 +9,25 @@ Processing::Processing(EnvDataset *envDataset, vector<EnvUnit *> sampleEnvUnits)
 {
 	this->EDS = envDataset;
 	this->SampleEnvUnits = SampleEnvUnits;
+	this->unc_thred_max = 0.2;
+	this->unc_thred_min = 0.1;
 	this->unc_thred = 0.2;
 	this->w1 = 1.0;
-	this->w1 = 0.0;
+	this->w2 = 0.0;
 	this->p_factor = 1.0;
+	this->imporve_factor = 0.2;
 }
 
 Processing::Processing(EnvDataset *envDataset)
 {
 	this->EDS = envDataset;
+	this->unc_thred_max = 0.2;
+	this->unc_thred_min = 0.1;
 	this->unc_thred = 0.2;
 	this->w1 = 1.0;
-	this->w1 = 0.0;
+	this->w2 = 0.0;
 	this->p_factor = 1.0;
+	this->imporve_factor = 0.2;
 }
 
 Processing::~Processing(void)
@@ -164,6 +170,30 @@ void Processing::RefreshUncertainty_Parallel()
 	}
 }
 
+void Processing::RefreshIsCanPredict()
+{
+	int count = this->EDS->EnvUnits.size();
+	for (int i = 0; i < count; ++i)
+	{
+		EnvUnit *e = this->EDS->EnvUnits[i];
+		if (e->IsCal)
+		{
+			if (e->Uncertainty <= this->unc_thred /*this->unc_thred_min*/)
+			{
+				e->isCanPredict = true;
+			}
+			else
+			{
+				e->isCanPredict = false;
+			}
+		}
+		else
+		{
+			e->isCanPredict = false;
+		}
+	}
+}
+
 double Processing::CalcUncertainty_Sum()
 {
 	double unc_sum = 0;
@@ -190,6 +220,14 @@ double Processing::ObjectFunction()
 	//cout<<o1<<"\t"<<o2<<"\n";
 	o = this->w1 * o1 + this->w2 * o2;
 	return o;
+}
+
+
+void Processing::UpdateUncertaintyThred()
+{
+	double unc_mean = this->CalcUncertainty_Sum() / this->EDS->CalcArea;
+	double unc_thred_new = this->unc_thred_max - this->imporve_factor * (this->unc_thred_max - unc_mean);
+	this->unc_thred = max(this->unc_thred_min, min(unc_thred_new, this->unc_thred_max));
 }
 
 void Processing::UpdateWeights()
@@ -232,7 +270,7 @@ EnvUnit* Processing::FindBestNewSampleByObj()
 			cout<<"Completed "<<setw(5)<<(int((i*1.0/count+0.5/segementCount)*segementCount))/(segementCount/100.0)<<"%";
 		}
 		sample_tmp = this->EDS->EnvUnits[i];
-		if (sample_tmp->IsCal)
+		if (sample_tmp->IsCal && sample_tmp->isCanPredict == false)
 		{
 			double obj = this->ObjectFunctionByNewSample(sample_tmp);
 			if (obj_min > obj)
@@ -251,14 +289,70 @@ vector<EnvUnit*> Processing::FindBestNewSampleListByObj(int newSampleCount)
 	for (int i = 0; i < newSampleCount; i++)
 	{
 		this->RefreshUncertainty();
-		this->UpdateWeights();
+		this->RefreshIsCanPredict();
+		this->UpdateUncertaintyThred();		// update the unc_thred with the itheration (key step)
+		this->UpdateWeights();				// update w1 and w2 with the itheration (key step)
 		EnvUnit *bestSample = this->FindBestNewSampleByObj();
+		if(bestSample == NULL)
+		{
+			cout<<"no suitable sample can be found.\n";
+			break;
+		}
 		this->SampleEnvUnits.push_back(bestSample);
 		
-		this->ShowInfo(i);
+		this->ShowInfo(i+1);
 		Utility::WriteCSV("./addSamples.csv", this->SampleEnvUnits);
 	}
 	return this->SampleEnvUnits;
+}
+
+void Processing::GetSampleListByDifferentPowerFactor( int newSampleCount, double pfactor_min, double pfactor_max, double pfactor_step )
+{
+	for(double p_factor = pfactor_min; p_factor <= pfactor_max+0.0001; p_factor+=pfactor_step)
+	{
+		cout<<"\n-------------------p_factor: "<<p_factor<<"--------------------\n";
+		this->SampleEnvUnits.clear();
+		this->p_factor = p_factor;
+		this->FindBestNewSampleListByObj(newSampleCount);
+		string outfilename = "./addSamples_" + Utility::ConvertToString(p_factor) + ".csv";
+		Utility::WriteCSV(outfilename, this->SampleEnvUnits);
+		cout<<"\n--------------------------------------------\n";
+	}
+}
+
+void Processing::GetSampleListByDifferentPowerFactorAndImproveFactor( int newSampleCount, double pfactor_min, double pfactor_max, double pfactor_step, double ifactor_min, double ifactor_max, double ifactor_step )
+{
+	for(double p_factor = pfactor_min; p_factor <= pfactor_max+0.0001; p_factor+=pfactor_step)
+	{
+		for(double i_factor = ifactor_min; i_factor <= ifactor_max+0.0001; i_factor+=ifactor_step)
+		{
+			cout<<"\n-------------------p_factor: "<<p_factor<<", i_factor: "<<i_factor<<"--------------------\n";
+			this->SampleEnvUnits.clear();
+			this->p_factor = p_factor;
+			this->imporve_factor = i_factor;
+			this->FindBestNewSampleListByObj(newSampleCount);
+			string outfilename = "./addSamples_" + Utility::ConvertToString(p_factor) + "-" + Utility::ConvertToString(i_factor) + ".csv";
+			Utility::WriteCSV(outfilename, this->SampleEnvUnits);
+			cout<<"\n--------------------------------------------\n";
+		}
+	}
+}
+
+void Processing::ShowSampleListInfoByDifferentPowerFactorAndImproveFactor( int newSampleCount, string dir, string prefix, double pfactor_min, double pfactor_max, double pfactor_step, double ifactor_min, double ifactor_max, double ifactor_step )
+{
+	for(double p_factor = pfactor_min; p_factor <= pfactor_max+0.0001; p_factor+=pfactor_step)
+	{
+		for(double i_factor = ifactor_min; i_factor <= ifactor_max+0.0001; i_factor+=ifactor_step)
+		{
+			this->SampleEnvUnits.clear();
+			string filename = dir + prefix + Utility::ConvertToString(p_factor) + "-" + Utility::ConvertToString(i_factor) + ".csv";
+			this->SampleEnvUnits = Utility::ReadCSV(filename, this->EDS);
+			this->RefreshUncertainty();
+			//cout<<"\n-- p_factor: "<<p_factor<<", i_factor: "<<i_factor<<"\t"<<this->CalcUncertainty_Sum()<<"\n";
+			cout<<p_factor<<","<<i_factor<<","<<this->CalcUncertainty_Sum()<<"\n";
+			//cout<<this->CalcUncertainty_Sum();
+		}
+	}
 }
 
 void Processing::ShowInfo(int iter)
@@ -275,6 +369,7 @@ void Processing::ShowInfo(int iter)
 	cout<<"sample size:\t"<<this->SampleEnvUnits.size()<<"\n";
 	cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
 	cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
+	cout<<"unc_thred:\t"<<this->unc_thred<<"\n";
 	cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
 	cout<<"O1:\t"<<o1<<"\n";
 	cout<<"O2:\t"<<o2<<"\n";
@@ -296,6 +391,7 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		}
 		this->SampleEnvUnits = samples_tmp;
 		this->RefreshUncertainty();
+		this->UpdateUncertaintyThred();
 		this->UpdateWeights();
 		double canPreArea = this->CalcCanPredictArea(this->unc_thred);
 		double totalArea = this->EDS->CalcArea;
@@ -303,16 +399,27 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		double o1 = 1.0 - 1.0 * canPreArea / totalArea;
 		double o2 = 1.0 * unc_sum / totalArea;
 
-		cout<<"\n-------------------------------------\n";
+		//cout<<"\n-------------------------------------\n";
 		//Utility::ShowEnvUnit(this->SampleEnvUnits);
 		cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
-		cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
-		cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
-		cout<<"O1:\t"<<o1<<"\n";
-		cout<<"O2:\t"<<o2<<"\n";
-		cout<<"W1:\t"<<this->w1<<"\n";
-		cout<<"W2:\t"<<this->w2<<"\n";
+		//cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
+		//cout<<"unc_thred:\t"<<this->unc_thred<<"\n";
+		//cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
+		//cout<<"O1:\t"<<o1<<"\n";
+		//cout<<"O2:\t"<<o2<<"\n";
+		//cout<<"W1:\t"<<this->w1<<"\n";
+		//cout<<"W2:\t"<<this->w2<<"\n";
 	}
+}
+
+void Processing::ShowParameters()
+{
+	cout<<"\n*************** parameters ***************\n";
+	cout<<"unc_thred_min:\t"<<this->unc_thred_min<<"\n";
+	cout<<"unc_thred_max:\t"<<this->unc_thred_max<<"\n";
+	cout<<"p-factor:\t"<<this->p_factor<<"\n";
+	cout<<"improve-factor:\t"<<this->imporve_factor<<"\n";
+	cout<<"*************** parameters ***************\n\n";
 }
 
 
