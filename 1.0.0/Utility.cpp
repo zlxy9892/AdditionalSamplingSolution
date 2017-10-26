@@ -33,6 +33,10 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 {
 	vector<EnvUnit*> envUnits;
 	ifstream file(filename); // declare file stream:
+	if (!file.is_open())
+	{
+		return envUnits;
+	}
 
 	// 处理第一行，获取X,Y属性在文件中的列数位置
 	string line;
@@ -40,6 +44,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 	vector<string> names;
 	int pos_X = 0;
 	int pos_Y = 1;
+	int pos_value = 2;
 	Utility::ParseStr(line, ',', names);
 	for(int i = 0; i < names.size(); i++)
 	{
@@ -57,6 +62,14 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 			break;
 		}
 	}
+	for(int i = 0; i < names.size(); i++)
+	{
+		if(names[i] == "value" || names[i] == "VALUE")
+		{
+			pos_value = i;
+			break;
+		}
+	}
 
 	// 根据x，y值读取样点信息
 	while (getline(file, line))
@@ -68,6 +81,12 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 		double x = atof(xstr);
 		double y = atof(ystr);
 		EnvUnit *e = envDataset->GetEnvUnit(x, y);
+		if (values.size() >= 3)
+		{
+			const char *valuestr = values[pos_value].c_str();
+			double value = atof(valuestr);
+			e->SoilVarible = value;
+		}
 		if(e != NULL)
 		{
 			envUnits.push_back(e);
@@ -219,6 +238,44 @@ EnvUnit* Utility::GetOneRandomEnvUnit( vector<EnvUnit *> envUnits )
 	return envUnits[index];
 }
 
+vector<EnvUnit *> Utility::GetEnvUnitsByFactor( vector<EnvUnit *> envUnits, double factorVal )
+{
+	vector<EnvUnit *> res;
+	int count = envUnits.size();
+	for (int i = 0; i < count; ++i)
+	{
+		EnvUnit *e = envUnits[i];
+		if (e->IsCal && e->EnvValues[0] == factorVal)
+		{
+			res.push_back(e);
+		}
+	}
+	return res;
+}
+
+vector<EnvUnit *> Utility::GetRandomEnvUnitsByFactor( vector<EnvUnit *> envUnits, double factorVal, int sampleCount )
+{
+	vector<EnvUnit *> res;
+	vector<EnvUnit *> eus = Utility::GetEnvUnitsByFactor(envUnits, factorVal);
+	for (int i = 0; i < sampleCount; i++)
+	{
+		res.push_back(Utility::GetOneRandomEnvUnit(eus));
+	}
+	return res;
+}
+
+vector<EnvUnit *> Utility::GetStratifiedRandomSamples( vector<EnvUnit *> envUnits, double factorValList[], int sampleCountList[], int n )
+{
+	vector<EnvUnit *> res;
+	for (int i = 0; i < n; i++)
+	{
+		vector<EnvUnit*> randomSamplesFromOneFactor = Utility::GetRandomEnvUnitsByFactor(envUnits, factorValList[i], sampleCountList[i]);
+		res.insert(res.end(), randomSamplesFromOneFactor.begin(), randomSamplesFromOneFactor.end());
+	}
+	std::random_shuffle(res.begin(), res.end());
+	return res;
+}
+
 void Utility::WriteCSV_Temp( string filename, vector<EnvUnit *> envUnits )
 {
 	if(envUnits.size() <= 0)
@@ -288,11 +345,11 @@ void Utility::ShowEnvUnit( vector<EnvUnit *> envUnits )
 		return;
 	}
 	double cellSize = envUnits[0]->CellSize;
-	cout<<"x\ty\n";
+	cout<<"x,y\n";
 	for (int i = 0; i < envUnits.size(); i++)
 	{
 		double x = envUnits[i]->Loc->X + cellSize / 2;
 		double y = envUnits[i]->Loc->Y - cellSize / 2;
-		cout<<x<<"\t"<<y<<"\n";
+		cout<<std::fixed<<setprecision(0)<<x<<","<<y<<"\n";
 	}
 }

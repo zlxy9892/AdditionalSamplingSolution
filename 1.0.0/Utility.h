@@ -11,6 +11,7 @@
 #include "EnvUnit.h"
 #include "EnvDataset.h"
 #include "boost/random.hpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -35,6 +36,9 @@ public:
 	static void ShowEnvUnit(vector<EnvUnit *> envUnits);
 
 	static EnvUnit* GetOneRandomEnvUnit(vector<EnvUnit *> envUnits);		// 获取一个随机的环境单元(栅格)
+	static vector<EnvUnit *> GetEnvUnitsByFactor(vector<EnvUnit *> envUnits, double factorVal);		// 获取某一母质的环境单元
+	static vector<EnvUnit *> GetRandomEnvUnitsByFactor(vector<EnvUnit *> envUnits, double factorVal, int sampleCount);		// 获取某一母质的一定数量的随机环境单元
+	static vector<EnvUnit *> GetStratifiedRandomSamples(vector<EnvUnit *> envUnits, double factorValList[], int sampleCountList[], int n);
 };
 
 #endif

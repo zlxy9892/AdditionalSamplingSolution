@@ -20,6 +20,7 @@ public:
 	string SampleID;					// 若是样点，记录样点的ID号
 	Location *Loc;						// 该点的位置信息
 	double Uncertainty;					// 该点的不确定性值
+	double Uncertainty_tmp;				// 该点的不确定性值（临时值）
 	double MaxSimi;						// 该点与样点集最大的相似度值
 	double CellSize;					// 该点的边长（宽高）
 	bool isCanPredict;					// 是否可以推测
