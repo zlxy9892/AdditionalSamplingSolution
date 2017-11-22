@@ -52,20 +52,30 @@ int main(int argc, char *argv[])
 	string dataDir = "../data/xc/";	
 	LoadData_xc(dataDir, envDataset);
 	cout<<"\nRead data OK!\n";
-	string sampleFname = "../data/raffelson/addSamples.csv";
 
 	// set the hyperparameters
 	Processing *processing = new Processing(envDataset);
-	processing->unc_thred_max = 0.4;
-	processing->unc_thred_min = 0.1;
-	processing->unc_thred = 0.4;
+	processing->unc_thred_max = 0.2;
+	processing->unc_thred_min = 0.01;
+	processing->unc_thred = 0.2;
 	processing->p_factor = 1.0;
 	processing->imporve_factor = 1.0;
-	int maxSampleNumber = 50;
+	int maxSampleNumber = 20;
 	processing->ShowParameters();
 
-	processing->FindBestNewSampleListByObj(maxSampleNumber);
-	Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+	// set existed samples
+	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/design/all_samples_298.csv", processing->EDS);
+	
+	//processing->SampleEnvUnits = existedSamples;
+	//processing->ShowProcessInfo("../data/raffelson/addSamples_5_20.csv");
+	//for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
+	//{ cout<<processing->SampleEnvUnits[i]->EnvValues[0]<<' '; }
+	//processing->ShowProcessInfo("../data/xc/lagacy_samples_20.csv");
+	//processing->ShowProcessInfo("../data/raffelson/addSamples_5_20.csv");
+
+	// add additional samples
+	//processing->FindBestNewSampleListByObj(maxSampleNumber);
+	//Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
 
 	// set different power factor of W1 (the ratio of the area can be predicted)
 	//processing->GetSampleListByDifferentPowerFactor(maxSampleNumber, 0.5, 1.5, 0.1);
@@ -92,6 +102,7 @@ int main(int argc, char *argv[])
 	// get stratified random samples
 	/*double factorList[5] = {1.0, 2.0, 3.0, 4.0, 5.0};
 	int sampleCountList[5] = {6, 3, 5, 4, 7};
+	int sampleCountList[5] = {1, 1, 1, 1, 1};
 	vector<EnvUnit*> stratifiedRandomSamples = Utility::GetStratifiedRandomSamples(envDataset->EnvUnits, factorList, sampleCountList, 5);
 	processing->SampleEnvUnits = stratifiedRandomSamples;
 	processing->RefreshUncertainty();
@@ -104,6 +115,43 @@ int main(int argc, char *argv[])
 	//processing->ValidateSampleEnvUnits = Utility::ReadCSV("../data/raffelson/ValidationSamples_real.csv", envDataset);
 	//processing->ShowProcessInfo("../data/raffelson/addSamples_25.csv");
 
+	// show info of different cluster number
+	/*for (int i = 6; i <= 25; i++)
+	{
+		processing->SampleEnvUnits.clear();
+		string filename = "../data/raffelson/cluster_samples/add_samples_cluster_" + Utility::ConvertToString(i) + ".csv";
+		processing->SampleEnvUnits = Utility::ReadCSV(filename, processing->EDS);
+		processing->ShowInfo(0);
+	}*/
+
+	// get most similar sample from existed sample set
+	vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/design/all_samples_298.csv", processing->EDS);
+	vector<EnvUnit*> addition_samples = Utility::ReadCSV("../data/xc/design/add_samples_mymethod_20_40.csv", processing->EDS);
+	double max_simi_min = 10.0;
+	int count = 0;
+	for (int i = 0; i < addition_samples.size(); i++)
+	{
+		//EnvUnit *e = Utility::GetOneRandomEnvUnit(processing->EDS->EnvUnits);
+		//EnvUnit *e = processing->EDS->EnvUnits[i];
+		EnvUnit *e = addition_samples[i];
+		if (!e->IsCal)
+		{
+			continue;
+		}
+		double max_simi_tmp = processing->MaxSimiSample(e, existedSamples);
+		cout<<max_simi_tmp<<"\n";
+		if (max_simi_tmp < 0.9)
+		{
+			count++;
+		}
+		/*if (max_simi_tmp < max_simi_min)
+		{
+		max_simi_min = max_simi_tmp;
+		}*/
+		//cout<<max_simi_min<<'\n';
+	}
+	cout<<count<<'\n';
+	cout<<processing->EDS->CalcArea;
 
 	// final handle
 	delete processing;

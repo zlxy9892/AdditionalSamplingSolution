@@ -61,8 +61,12 @@ public:
 	void UpdateUncertaintyThred();
 	void UpdateWeights();
 
+	vector<EnvUnit *> ConstraintKmeansClustering(vector<EnvUnit *> envUnits, vector<EnvUnit *> existedSamples, int newSampleCount);
+
 	void PredictClass(vector<EnvUnit *> predEnvUnits);
 	double CalcPredictClassAccuracy();
+
+	double MaxSimiSample( EnvUnit *e, vector<EnvUnit *> envUnits );
 
 	// ----------- for test ------------ //
 	void GetSampleListByDifferentPowerFactor(int newSampleCount, double pfactor_min, double pfactor_max, double pfactor_step);

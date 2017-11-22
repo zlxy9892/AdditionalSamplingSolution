@@ -508,18 +508,21 @@ void Processing::ShowInfo(int iter)
 	double o1 = 1.0 - 1.0 * canPreArea / totalArea;
 	double o2 = 1.0 * unc_sum / totalArea;
 
-	cout<<"\n-------------------------------------\n";
-	cout<<"iteration:\t"<<iter<<"\n";
-	//Utility::ShowEnvUnit(this->SampleEnvUnits);
-	cout<<"sample size:\t"<<this->SampleEnvUnits.size()<<"\n";
-	cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
-	cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
-	cout<<"unc_thred:\t"<<this->unc_thred<<"\n";
-	cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
-	cout<<"O1:\t"<<o1<<"\n";
-	cout<<"O2:\t"<<o2<<"\n";
-	cout<<"W1:\t"<<this->w1<<"\n";
-	cout<<"W2:\t"<<this->w2<<"\n";
+	//cout<<"\n-------------------------------------\n";
+	//cout<<"iteration:\t"<<iter<<"\n";
+	////Utility::ShowEnvUnit(this->SampleEnvUnits);
+	//cout<<"sample size:\t"<<this->SampleEnvUnits.size()<<"\n";
+	//cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
+	//cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
+	//cout<<"unc_thred:\t"<<this->unc_thred<<"\n";
+	//cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
+	//cout<<"O1:\t"<<o1<<"\n";
+	//cout<<"O2:\t"<<o2<<"\n";
+	//cout<<"W1:\t"<<this->w1<<"\n";
+	//cout<<"W2:\t"<<this->w2<<"\n";
+	//cout<<"can_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
+	//cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
+	cout<<"can_pred_area_0.3:\t"<<this->CalcCanPredictAreaProportion(0.3)<<"\n";
 }
 
 void Processing::ShowProcessInfo( string sampleFilename )
@@ -558,7 +561,8 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		//cout<<"W2:\t"<<this->w2<<"\n";
 		//cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
 		//cout<<"can_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
-		cout<<"pred_class_accuracy:\t"<<this->CalcPredictClassAccuracy()<<"\n";
+		cout<<"can_pred_area_0.3:\t"<<this->CalcCanPredictAreaProportion(0.3)<<"\n";
+		//cout<<"pred_class_accuracy:\t"<<this->CalcPredictClassAccuracy()<<"\n";
 	}
 }
 
@@ -605,4 +609,29 @@ void Processing::PredictClass( vector<EnvUnit *> predEnvUnits )
 			}
 		}
 	}
+}
+
+vector<EnvUnit *> Processing::ConstraintKmeansClustering( vector<EnvUnit *> envUnits, vector<EnvUnit *> existedSamples, int newSampleCount )
+{
+	vector<EnvUnit *> aa;
+	return aa;
+}
+
+double Processing::MaxSimiSample( EnvUnit *e, vector<EnvUnit *> envUnits )
+{
+	double simi_max = 0.0;
+	double simi_tmp = 0.0;
+	EnvUnit *max_simi_sample = envUnits[0];
+	for (int i = 0; i < envUnits.size(); i++)
+	{
+		EnvUnit *se = envUnits[i];
+		simi_tmp = this->CalcSimi(e, se);
+		if (simi_max < simi_tmp)
+		{
+			max_simi_sample = se;
+			simi_max = simi_tmp;
+		}
+	}
+	//cout<<"max_simi:\t"<<simi_max<<"\n";
+	return simi_max;
 }

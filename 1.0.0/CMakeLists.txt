@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
 project(GeoProcessing_Project)
 
-set(BOOST_INCLUDE_DIRS D:/dev/boost/include)
-set(BOOST_LIBRARY_DIRS D:/dev/boost/lib)
+set(BOOST_INCLUDE_DIRS C:/dev/boost/include)
+set(BOOST_LIBRARY_DIRS C:/dev/boost/lib)
 
-set(GDAL_INCLUDE_DIRS D:/dev/gdal/include)
-set(GDAL_LIBRARY_DIRS D:/dev/gdal/lib)
+set(GDAL_INCLUDE_DIRS C:/dev/gdal/include)
+set(GDAL_LIBRARY_DIRS C:/dev/gdal/lib)
 set(GDAL_LIBRARIES gdal_i.lib)
 
 include_directories(${GDAL_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS})
