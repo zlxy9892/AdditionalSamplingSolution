@@ -550,8 +550,9 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		double o2 = 1.0 * unc_sum / totalArea;
 
 		//cout<<"\n-------------------------------------\n";
+		cout<<i+1<<"\t";
 		//Utility::ShowEnvUnit(this->SampleEnvUnits);
-		//cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
+		cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
 		//cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
 		//cout<<"unc_thred:\t"<<this->unc_thred<<"\n";
 		//cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
@@ -561,7 +562,7 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		//cout<<"W2:\t"<<this->w2<<"\n";
 		//cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
 		//cout<<"can_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
-		cout<<"can_pred_area_0.3:\t"<<this->CalcCanPredictAreaProportion(0.3)<<"\n";
+		//cout<<"can_pred_area_0.3:\t"<<this->CalcCanPredictAreaProportion(0.3)<<"\n";
 		//cout<<"pred_class_accuracy:\t"<<this->CalcPredictClassAccuracy()<<"\n";
 	}
 }

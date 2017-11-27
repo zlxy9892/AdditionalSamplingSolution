@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 {
 	cout<<"Start!\n";
 
-	// 初始化环境因子数据
+	// initialize environmental variables
 	cout<<"\nLoading data ...";
 	GDALAllRegister();
 	EnvDataset *envDataset = new EnvDataset();
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 	//LoadData_raffelson(dataDir, envDataset);
 	//string dataDir = "../data/heshan/";
 	//LoadData_heshan(dataDir, envDataset);
-	string dataDir = "../data/xc/";	
+	string dataDir = "../data/xc/";
 	LoadData_xc(dataDir, envDataset);
 	cout<<"\nRead data OK!\n";
 
@@ -62,6 +62,10 @@ int main(int argc, char *argv[])
 	processing->imporve_factor = 1.0;
 	int maxSampleNumber = 20;
 	processing->ShowParameters();
+
+	// show process info
+	processing->ShowProcessInfo("../data/xc/design/add_samples_mymethod_20_40.csv");
+	//processing->ShowProcessInfo("../data/xc/design/add_samples_oldmethod_20_40_0.2.csv");
 
 	// set existed samples
 	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/design/all_samples_298.csv", processing->EDS);
@@ -125,33 +129,33 @@ int main(int argc, char *argv[])
 	}*/
 
 	// get most similar sample from existed sample set
-	vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/design/all_samples_298.csv", processing->EDS);
-	vector<EnvUnit*> addition_samples = Utility::ReadCSV("../data/xc/design/add_samples_mymethod_20_40.csv", processing->EDS);
-	double max_simi_min = 10.0;
-	int count = 0;
-	for (int i = 0; i < addition_samples.size(); i++)
-	{
-		//EnvUnit *e = Utility::GetOneRandomEnvUnit(processing->EDS->EnvUnits);
-		//EnvUnit *e = processing->EDS->EnvUnits[i];
-		EnvUnit *e = addition_samples[i];
-		if (!e->IsCal)
-		{
-			continue;
-		}
-		double max_simi_tmp = processing->MaxSimiSample(e, existedSamples);
-		cout<<max_simi_tmp<<"\n";
-		if (max_simi_tmp < 0.9)
-		{
-			count++;
-		}
-		/*if (max_simi_tmp < max_simi_min)
-		{
-		max_simi_min = max_simi_tmp;
-		}*/
-		//cout<<max_simi_min<<'\n';
-	}
-	cout<<count<<'\n';
-	cout<<processing->EDS->CalcArea;
+	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/design/all_samples_298.csv", processing->EDS);
+	//vector<EnvUnit*> addition_samples = Utility::ReadCSV("../data/xc/design/add_samples_mymethod_20_40.csv", processing->EDS);
+	//double max_simi_min = 10.0;
+	//int count = 0;
+	//for (int i = 0; i < addition_samples.size(); i++)
+	//{
+	//	//EnvUnit *e = Utility::GetOneRandomEnvUnit(processing->EDS->EnvUnits);
+	//	//EnvUnit *e = processing->EDS->EnvUnits[i];
+	//	EnvUnit *e = addition_samples[i];
+	//	if (!e->IsCal)
+	//	{
+	//		continue;
+	//	}
+	//	double max_simi_tmp = processing->MaxSimiSample(e, existedSamples);
+	//	cout<<max_simi_tmp<<"\n";
+	//	if (max_simi_tmp < 0.9)
+	//	{
+	//		count++;
+	//	}
+	//	/*if (max_simi_tmp < max_simi_min)
+	//	{
+	//	max_simi_min = max_simi_tmp;
+	//	}*/
+	//	//cout<<max_simi_min<<'\n';
+	//}
+	//cout<<count<<'\n';
+	//cout<<processing->EDS->CalcArea;
 
 	// final handle
 	delete processing;
