@@ -317,10 +317,15 @@ void Utility::WriteEnvDataCSV( string filename, vector<EnvUnit *> envUnits )
 	file<<firstLine;
 
 	double cellSize = envUnits[0]->CellSize;
+	EnvUnit *e = nullptr;
 	for(int i = 0; i < envUnits.size(); i++)
 	{
 		string line = "";
-		EnvUnit *e = envUnits[i];
+		e = envUnits[i];
+		if (!e->IsCal)
+		{
+			continue;
+		}
 		double x = e->Loc->X + cellSize / 2;
 		double y = e->Loc->Y - cellSize / 2;
 		string xstr = Utility::ConvertToString(x);
@@ -334,6 +339,7 @@ void Utility::WriteEnvDataCSV( string filename, vector<EnvUnit *> envUnits )
 		line += "\n";
 		file<<line;
 	}
+	e = nullptr;
 	file.flush();
 	file.close();
 }
@@ -352,4 +358,34 @@ void Utility::ShowEnvUnit( vector<EnvUnit *> envUnits )
 		double y = envUnits[i]->Loc->Y - cellSize / 2;
 		cout<<std::fixed<<setprecision(0)<<x<<","<<y<<"\n";
 	}
+}
+
+vector<EnvUnit *> Utility::ReadEnvDataFromCSV( string filename, int envCount )
+{
+	vector<EnvUnit*> envUnits;
+	ifstream file(filename); // declare file stream:
+	if (!file.is_open())
+	{
+		return envUnits;
+	}
+
+	// 处理第一行，获取X,Y属性在文件中的列数位置
+	string line;
+
+	// 根据x，y值读取样点信息
+	while (getline(file, line))
+	{
+		vector<string> values;
+		Utility::ParseStr(line, ',', values);
+		EnvUnit *e = new EnvUnit();
+		for (int i = 0; i < values.size(); i++)
+		{
+			double val = atof(values[i].c_str());
+			e->EnvValues.push_back(val);
+			e->DataTypes.push_back(DataTypeEnum::SINGLEVALUE);
+		}
+		envUnits.push_back(e);
+	}
+	file.close();
+	return envUnits;
 }

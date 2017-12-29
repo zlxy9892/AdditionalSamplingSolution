@@ -7,9 +7,10 @@ using namespace std;
 void LoadData_heshan(string dataDir, EnvDataset *envDataset)
 {
 	envDataset->Layers.push_back(new EnvLayer(0, "slope", dataDir + "slp.tif", DataTypeEnum::SINGLEVALUE));
-	envDataset->Layers.push_back(new EnvLayer(1, "planc", dataDir + "plan.tif", DataTypeEnum::SINGLEVALUE));
-	envDataset->Layers.push_back(new EnvLayer(2, "profc", dataDir + "prof.tif", DataTypeEnum::SINGLEVALUE));
-	envDataset->Layers.push_back(new EnvLayer(3, "twi", dataDir + "twi.tif", DataTypeEnum::SINGLEVALUE));
+	envDataset->Layers.push_back(new EnvLayer(1, "planc", dataDir + "planc.tif", DataTypeEnum::SINGLEVALUE));
+	envDataset->Layers.push_back(new EnvLayer(2, "profc", dataDir + "profc.tif", DataTypeEnum::SINGLEVALUE));
+	envDataset->Layers.push_back(new EnvLayer(3, "wet", dataDir + "wet.tif", DataTypeEnum::SINGLEVALUE));
+	envDataset->Layers.push_back(new EnvLayer(4, "soiltype", dataDir + "soiltype_hs.tif", DataTypeEnum::SINGLEVALUE));
 	envDataset->RefreshAll();
 }
 
@@ -47,25 +48,33 @@ int main(int argc, char *argv[])
 	EnvDataset *envDataset = new EnvDataset();
 	//string dataDir = "../data/raffelson/";
 	//LoadData_raffelson(dataDir, envDataset);
-	//string dataDir = "../data/heshan/";
-	//LoadData_heshan(dataDir, envDataset);
-	string dataDir = "../data/xc/";	
-	LoadData_xc(dataDir, envDataset);
+	string dataDir = "../data/heshan/envdata/";
+	LoadData_heshan(dataDir, envDataset);
+	//string dataDir = "../data/xc/";	
+	//LoadData_xc(dataDir, envDataset);
 	cout<<"\nRead data OK!\n";
-	string sampleFname = "../data/raffelson/addSamples.csv";
 
 	// set the hyperparameters
 	Processing *processing = new Processing(envDataset);
-	processing->unc_thred_max = 0.4;
-	processing->unc_thred_min = 0.1;
-	processing->unc_thred = 0.4;
+	processing->unc_thred_max = 0.2;
+	processing->unc_thred_min = 0.01;
+	processing->unc_thred = 0.2;
 	processing->p_factor = 1.0;
 	processing->imporve_factor = 1.0;
-	int maxSampleNumber = 50;
+	int maxSampleNumber = 20;
 	processing->ShowParameters();
 
-	processing->FindBestNewSampleListByObj(maxSampleNumber);
-	Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+	// set existed samples
+	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/existed_samples_40.csv", processing->EDS);
+	//processing->SampleEnvUnits = existedSamples;
+	//for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
+	//{ cout<<processing->SampleEnvUnits[i]->EnvValues[0]<<' '; }
+	//processing->ShowProcessInfo("../data/raffelson/add_samples_cluster_10_20.csv");
+	//processing->ShowProcessInfo("../data/raffelson/addSamples_5_20.csv");
+
+	// add additional samples
+	//processing->FindBestNewSampleListByObj(maxSampleNumber);
+	//Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
 
 	// set different power factor of W1 (the ratio of the area can be predicted)
 	//processing->GetSampleListByDifferentPowerFactor(maxSampleNumber, 0.5, 1.5, 0.1);
@@ -81,7 +90,7 @@ int main(int argc, char *argv[])
 	//processing->ShowProcessInfo("../data/raffelson/addSamples.csv");
 	//processing->ShowProcessInfo("../data/raffelson/compare/sss_25/sss5.csv");
 
-	//Utility::WriteEnvDataCSV("envData_raf.csv", envDataset->EnvUnits);
+	Utility::WriteEnvDataCSV("envData_hs.csv", envDataset->EnvUnits);
 
 	// read samples by kmeans algorithm
 	/*vector<EnvUnit *> samples_kmeans = Utility::ReadCSV("../data/raffelson/samples_kmeans/samples_kmeans_20_.csv", processing->EDS);
@@ -92,6 +101,7 @@ int main(int argc, char *argv[])
 	// get stratified random samples
 	/*double factorList[5] = {1.0, 2.0, 3.0, 4.0, 5.0};
 	int sampleCountList[5] = {6, 3, 5, 4, 7};
+	int sampleCountList[5] = {1, 1, 1, 1, 1};
 	vector<EnvUnit*> stratifiedRandomSamples = Utility::GetStratifiedRandomSamples(envDataset->EnvUnits, factorList, sampleCountList, 5);
 	processing->SampleEnvUnits = stratifiedRandomSamples;
 	processing->RefreshUncertainty();

@@ -556,9 +556,9 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		//cout<<"O2:\t"<<o2<<"\n";
 		//cout<<"W1:\t"<<this->w1<<"\n";
 		//cout<<"W2:\t"<<this->w2<<"\n";
-		//cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
+		cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
 		//cout<<"can_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
-		cout<<"pred_class_accuracy:\t"<<this->CalcPredictClassAccuracy()<<"\n";
+		//cout<<"pred_class_accuracy:\t"<<this->CalcPredictClassAccuracy()<<"\n";
 	}
 }
 
@@ -605,4 +605,10 @@ void Processing::PredictClass( vector<EnvUnit *> predEnvUnits )
 			}
 		}
 	}
+}
+
+vector<EnvUnit *> Processing::ConstraintKmeansClustering( vector<EnvUnit *> envUnits, vector<EnvUnit *> existedSamples, int newSampleCount )
+{
+	vector<EnvUnit *> aa;
+	return aa;
 }

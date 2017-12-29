@@ -61,6 +61,8 @@ public:
 	void UpdateUncertaintyThred();
 	void UpdateWeights();
 
+	vector<EnvUnit *> ConstraintKmeansClustering(vector<EnvUnit *> envUnits, vector<EnvUnit *> existedSamples, int newSampleCount);
+
 	void PredictClass(vector<EnvUnit *> predEnvUnits);
 	double CalcPredictClassAccuracy();
 
