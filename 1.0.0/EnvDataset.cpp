@@ -110,7 +110,7 @@ void EnvDataset::RefreshSetting()
 	this->Setting->Ymax = geoTransform[3];
 	this->Setting->Width = firstLayerData->GetRasterXSize();
 	this->Setting->Height = firstLayerData->GetRasterYSize();
-	// ¼ì²éÆäÓàµÄÍ¼²ã»ù±¾ÊôĞÔÊÇ·ñÓëµÚÒ»Í¼²ãÒ»ÖÂ...
+	// æ£€æŸ¥å…¶ä½™çš„å›¾å±‚åŸºæœ¬å±æ€§æ˜¯å¦ä¸ç¬¬ä¸€å›¾å±‚ä¸€è‡´...
 }
 
 EnvUnit* EnvDataset::GetEnvUnit(int row, int col)

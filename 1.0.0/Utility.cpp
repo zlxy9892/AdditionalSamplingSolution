@@ -38,7 +38,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 		return envUnits;
 	}
 
-	// ´¦ÀíµÚÒ»ĞĞ£¬»ñÈ¡X,YÊôĞÔÔÚÎÄ¼şÖĞµÄÁĞÊıÎ»ÖÃ
+	// å¤„ç†ç¬¬ä¸€è¡Œï¼Œè·å–X,Yå±æ€§åœ¨æ–‡ä»¶ä¸­çš„åˆ—æ•°ä½ç½®
 	string line;
 	getline(file, line);
 	vector<string> names;
@@ -71,7 +71,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 		}
 	}
 
-	// ¸ù¾İx£¬yÖµ¶ÁÈ¡ÑùµãĞÅÏ¢
+	// æ ¹æ®xï¼Œyå€¼è¯»å–æ ·ç‚¹ä¿¡æ¯
 	while (getline(file, line))
 	{
 		vector<string> values;
@@ -101,7 +101,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset, str
 	vector<EnvUnit*> envUnits;
 	ifstream file(filename); // declare file stream:
 
-	// ´¦ÀíµÚÒ»ĞĞ£¬»ñÈ¡X,YÊôĞÔ¡¢ÍÁÈÀÊôĞÔÖµÃû³Æ¡¢ÑùµãIDºÅÔÚÎÄ¼şÖĞµÄÁĞÊıÎ»ÖÃ
+	// å¤„ç†ç¬¬ä¸€è¡Œï¼Œè·å–X,Yå±æ€§ã€åœŸå£¤å±æ€§å€¼åç§°ã€æ ·ç‚¹IDå·åœ¨æ–‡ä»¶ä¸­çš„åˆ—æ•°ä½ç½®
 	string line;
 	getline(file, line);
 	vector<string> names;
@@ -143,7 +143,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset, str
 		}
 	}
 
-	// ¸ù¾İx£¬yÖµ¶ÁÈ¡ÑùµãĞÅÏ¢
+	// æ ¹æ®xï¼Œyå€¼è¯»å–æ ·ç‚¹ä¿¡æ¯
 	while (getline(file, line))
 	{
 		vector<string> values;
@@ -231,7 +231,7 @@ EnvUnit* Utility::GetOneRandomEnvUnit( vector<EnvUnit *> envUnits )
 
 	int maxnum = indexList.size();
 
-	boost::random::uniform_int_distribution<> dist(0, maxnum-1);		// maxnum Îª×î´óÖµ£¬ÆäËæ»úÓòÎª 0 ~ maxnum-1
+	boost::random::uniform_int_distribution<> dist(0, maxnum-1);		// maxnum ä¸ºæœ€å¤§å€¼ï¼Œå…¶éšæœºåŸŸä¸º 0 ~ maxnum-1
 	int ii = dist(rng);
 	int index = indexList[ii];
 
@@ -369,10 +369,10 @@ vector<EnvUnit *> Utility::ReadEnvDataFromCSV( string filename, int envCount )
 		return envUnits;
 	}
 
-	// ´¦ÀíµÚÒ»ĞĞ£¬»ñÈ¡X,YÊôĞÔÔÚÎÄ¼şÖĞµÄÁĞÊıÎ»ÖÃ
+	// å¤„ç†ç¬¬ä¸€è¡Œï¼Œè·å–X,Yå±æ€§åœ¨æ–‡ä»¶ä¸­çš„åˆ—æ•°ä½ç½®
 	string line;
 
-	// ¸ù¾İx£¬yÖµ¶ÁÈ¡ÑùµãĞÅÏ¢
+	// æ ¹æ®xï¼Œyå€¼è¯»å–æ ·ç‚¹ä¿¡æ¯
 	while (getline(file, line))
 	{
 		vector<string> values;

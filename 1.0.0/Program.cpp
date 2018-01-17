@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 {
 	cout<<"Start!\n";
 
-	// ³õÊ¼»¯»·¾³Òò×ÓÊý¾Ý
+	// åˆå§‹åŒ–çŽ¯å¢ƒå› å­æ•°æ®
 	cout<<"\nLoading data ...";
 	GDALAllRegister();
 	EnvDataset *envDataset = new EnvDataset();

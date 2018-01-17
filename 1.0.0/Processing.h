@@ -1,4 +1,4 @@
-// ´¦Àí·½·¨
+// å¤„ç†æ–¹æ³•
 #ifndef _PROCESSING_H_
 #define _PROCESSING_H_
 
@@ -29,10 +29,10 @@ public:
 	double unc_thred_max;
 	double unc_thred_min;
 	double unc_thred;
-	double w1;			// È¨ÖØ1£º²»¿ÉÍÆ²âÃæ»ı±ÈÀı
-	double w2;			// È¨ÖØ2£º1-w1
-	double p_factor;	// Ö¸ÊıÒò×Ó
-	double imporve_factor;	// ¼¤½øÂÊ
+	double w1;			// æƒé‡1ï¼šä¸å¯æ¨æµ‹é¢ç§¯æ¯”ä¾‹
+	double w2;			// æƒé‡2ï¼š1-w1
+	double p_factor;	// æŒ‡æ•°å› å­
+	double imporve_factor;	// æ¿€è¿›ç‡
 
 public:
 	Processing(void);
@@ -41,21 +41,21 @@ public:
 	Processing(EnvDataset *envDataset);
 
 	double CalcSimi_Single(double e1, double e2, double range, DataTypeEnum dataType);
-	double CalcSimi(EnvUnit *e1, EnvUnit *e2);											// ¼ÆËãÁ½¸ö»·¾³µ¥ÔªÖ®¼äµÄ×ÛºÏÏàËÆ¶È
-	double CalcUncertainty(vector<EnvUnit *> samples, EnvUnit *e);						// ¼ÆËãÄ³Ò»µãµÄÍÆ²â²»È·¶¨ĞÔ
-	int CalcCanPredictArea(double thred_unc);											// ¼ÆËã¿ÉÍÆ²âÃæ»ı£¬¼´²»È·¶¨ĞÔÔÚãĞÖµÒÔÄÚµÄÕ¤¸ñÊıÁ¿
-	int CalcCanPredictAreaByUncTmp();													// ¸ù¾İ unc_tmp ¼ÆËã¿ÉÍÆ²âÃæ»ı£¬¼´²»È·¶¨ĞÔÔÚãĞÖµÒÔÄÚµÄÕ¤¸ñÊıÁ¿
-	double CalcCanPredictAreaProportion(double thred_unc);								// ¼ÆËã¿ÉÍÆ²âÃæ»ıÕ¼×ÜÃæ»ıµÄ±ÈÀı
-	double CalcUncertainty_Sum();														// ¼ÆËãÍÆ²â²»È·¶¨ĞÔ×ÜºÍ
-	double CalcUncertaintyTmp_Sum();													// ¼ÆËãÁÙÊ±ÍÆ²â²»È·¶¨ĞÔ×ÜºÍ
-	void RefreshUncertainty(vector<EnvUnit *> samples);									// ¸üĞÂÃ¿¸ö´ıÍÆ²âµãµÄ²»È·¶¨ĞÔ
-	void RefreshUncertainty();															// ¸üĞÂÃ¿¸ö´ıÍÆ²âµãµÄ²»È·¶¨ĞÔ
-	void RefreshUncertainty_Parallel();													// ¸üĞÂÃ¿¸ö´ıÍÆ²âµãµÄ²»È·¶¨ĞÔ
-	void RefreshUncertaintyTmpByNewSample(EnvUnit* newSample);							// ¸üĞÂÃ¿¸ö´ıÍÆ²âµãµÄ²»È·¶¨ĞÔ£¨»ùÓÚÒ»¸öĞÂÔöÑùµã£¬ËÙÂÊ¿ìÒ»Ğ©£©
-	void RefreshIsCanPredict();															// ¸üĞÂÃ¿¸öµãÊÇ·ñ¿É±»ÍÆ²â£¨Ã¿¸öµãµÄÍÆ²â²»È·¶¨ĞÔÊÇ·ñµÍÓÚ×îµÍ²»È·¶¨ĞÔãĞÖµ unc_thred_min£©
-	double ObjectFunction();															// ¼ÆËãÄ¿±êº¯Êı
-	double ObjectFunction(double thred_unc);											// ¼ÆËãÄ¿±êº¯Êı£¨ÔÚÄ³Ò»²»È·¶¨ĞÔÔ¼ÊøÏÂµÄ½á¹ûÖµ£©
-	double ObjectFunctionByNewSample(EnvUnit *newSample);								// ¼ÆËãÄ¿±êº¯Êı
+	double CalcSimi(EnvUnit *e1, EnvUnit *e2);											// è®¡ç®—ä¸¤ä¸ªç¯å¢ƒå•å…ƒä¹‹é—´çš„ç»¼åˆç›¸ä¼¼åº¦
+	double CalcUncertainty(vector<EnvUnit *> samples, EnvUnit *e);						// è®¡ç®—æŸä¸€ç‚¹çš„æ¨æµ‹ä¸ç¡®å®šæ€§
+	int CalcCanPredictArea(double thred_unc);											// è®¡ç®—å¯æ¨æµ‹é¢ç§¯ï¼Œå³ä¸ç¡®å®šæ€§åœ¨é˜ˆå€¼ä»¥å†…çš„æ …æ ¼æ•°é‡
+	int CalcCanPredictAreaByUncTmp();													// æ ¹æ® unc_tmp è®¡ç®—å¯æ¨æµ‹é¢ç§¯ï¼Œå³ä¸ç¡®å®šæ€§åœ¨é˜ˆå€¼ä»¥å†…çš„æ …æ ¼æ•°é‡
+	double CalcCanPredictAreaProportion(double thred_unc);								// è®¡ç®—å¯æ¨æµ‹é¢ç§¯å æ€»é¢ç§¯çš„æ¯”ä¾‹
+	double CalcUncertainty_Sum();														// è®¡ç®—æ¨æµ‹ä¸ç¡®å®šæ€§æ€»å’Œ
+	double CalcUncertaintyTmp_Sum();													// è®¡ç®—ä¸´æ—¶æ¨æµ‹ä¸ç¡®å®šæ€§æ€»å’Œ
+	void RefreshUncertainty(vector<EnvUnit *> samples);									// æ›´æ–°æ¯ä¸ªå¾…æ¨æµ‹ç‚¹çš„ä¸ç¡®å®šæ€§
+	void RefreshUncertainty();															// æ›´æ–°æ¯ä¸ªå¾…æ¨æµ‹ç‚¹çš„ä¸ç¡®å®šæ€§
+	void RefreshUncertainty_Parallel();													// æ›´æ–°æ¯ä¸ªå¾…æ¨æµ‹ç‚¹çš„ä¸ç¡®å®šæ€§
+	void RefreshUncertaintyTmpByNewSample(EnvUnit* newSample);							// æ›´æ–°æ¯ä¸ªå¾…æ¨æµ‹ç‚¹çš„ä¸ç¡®å®šæ€§ï¼ˆåŸºäºä¸€ä¸ªæ–°å¢æ ·ç‚¹ï¼Œé€Ÿç‡å¿«ä¸€äº›ï¼‰
+	void RefreshIsCanPredict();															// æ›´æ–°æ¯ä¸ªç‚¹æ˜¯å¦å¯è¢«æ¨æµ‹ï¼ˆæ¯ä¸ªç‚¹çš„æ¨æµ‹ä¸ç¡®å®šæ€§æ˜¯å¦ä½äºæœ€ä½ä¸ç¡®å®šæ€§é˜ˆå€¼ unc_thred_minï¼‰
+	double ObjectFunction();															// è®¡ç®—ç›®æ ‡å‡½æ•°
+	double ObjectFunction(double thred_unc);											// è®¡ç®—ç›®æ ‡å‡½æ•°ï¼ˆåœ¨æŸä¸€ä¸ç¡®å®šæ€§çº¦æŸä¸‹çš„ç»“æœå€¼ï¼‰
+	double ObjectFunctionByNewSample(EnvUnit *newSample);								// è®¡ç®—ç›®æ ‡å‡½æ•°
 	EnvUnit* FindBestNewSampleByObj();
 	vector<EnvUnit*> FindBestNewSampleListByObj(int newSampleCount);
 	void UpdateUncertaintyThred();

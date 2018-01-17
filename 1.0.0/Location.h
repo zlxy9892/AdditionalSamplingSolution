@@ -5,10 +5,10 @@
 class Location
 {
 public:
-	int Row;	// դ������λ�õ��к�
-	int Col;	// դ������λ�õ��к�
-	double X;	// դ������λ�õ�x����ֵ����դ������Ͻǵ�ֵ
-	double Y;	// դ������λ�õ�y����ֵ����դ������Ͻǵ�ֵ
+	int Row;	// 栅格所在位置的行号
+	int Col;	// 栅格所在位置的列号
+	double X;	// 栅格所在位置的x坐标值，该栅格的左上角的值
+	double Y;	// 栅格所在位置的y坐标值，该栅格的左上角的值
 
 public:
 	Location(void);

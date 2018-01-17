@@ -1,4 +1,4 @@
-// »·¾³µ¥Ôª£¬°üº¬¶à¸ö»·¾³Òò×ÓµÄĞÅÏ¢
+// ç¯å¢ƒå•å…ƒï¼ŒåŒ…å«å¤šä¸ªç¯å¢ƒå› å­çš„ä¿¡æ¯
 #ifndef _ENVUNIT_H_
 #define _ENVUNIT_H_
 
@@ -12,29 +12,29 @@ using namespace std;
 class EnvUnit
 {
 public:
-	bool IsCal;							// ÊÇ·ñ²ÎÓë¼ÆËã
-	vector<double> EnvValues;			// ¸ÃµãÄÚËùÓĞ»·¾³Òò×ÓÖµ
-	vector<DataTypeEnum> DataTypes;		// ¸ÃµãÄÚËùÓĞ»·¾³Òò×ÓÖµµÄÀàĞÍ
-	double SoilType;					// ÍÁÈÀÀàĞÍÖµ
-	double SoilVarible;					// ÍÁÈÀÊôĞÔÖµ
-	string SampleID;					// ÈôÊÇÑùµã£¬¼ÇÂ¼ÑùµãµÄIDºÅ
-	Location *Loc;						// ¸ÃµãµÄÎ»ÖÃĞÅÏ¢
-	double Uncertainty;					// ¸ÃµãµÄ²»È·¶¨ĞÔÖµ
-	double Uncertainty_tmp;				// ¸ÃµãµÄ²»È·¶¨ĞÔÖµ£¨ÁÙÊ±Öµ£©
-	double MaxSimi;						// ¸ÃµãÓëÑùµã¼¯×î´óµÄÏàËÆ¶ÈÖµ
-	double CellSize;					// ¸ÃµãµÄ±ß³¤£¨¿í¸ß£©
-	bool isCanPredict;					// ÊÇ·ñ¿ÉÒÔÍÆ²â
+	bool IsCal;							// æ˜¯å¦å‚ä¸è®¡ç®—
+	vector<double> EnvValues;			// è¯¥ç‚¹å†…æ‰€æœ‰ç¯å¢ƒå› å­å€¼
+	vector<DataTypeEnum> DataTypes;		// è¯¥ç‚¹å†…æ‰€æœ‰ç¯å¢ƒå› å­å€¼çš„ç±»å‹
+	double SoilType;					// åœŸå£¤ç±»å‹å€¼
+	double SoilVarible;					// åœŸå£¤å±æ€§å€¼
+	string SampleID;					// è‹¥æ˜¯æ ·ç‚¹ï¼Œè®°å½•æ ·ç‚¹çš„IDå·
+	Location *Loc;						// è¯¥ç‚¹çš„ä½ç½®ä¿¡æ¯
+	double Uncertainty;					// è¯¥ç‚¹çš„ä¸ç¡®å®šæ€§å€¼
+	double Uncertainty_tmp;				// è¯¥ç‚¹çš„ä¸ç¡®å®šæ€§å€¼ï¼ˆä¸´æ—¶å€¼ï¼‰
+	double MaxSimi;						// è¯¥ç‚¹ä¸æ ·ç‚¹é›†æœ€å¤§çš„ç›¸ä¼¼åº¦å€¼
+	double CellSize;					// è¯¥ç‚¹çš„è¾¹é•¿ï¼ˆå®½é«˜ï¼‰
+	bool isCanPredict;					// æ˜¯å¦å¯ä»¥æ¨æµ‹
 
-	double PredictSoilVarible;			// ÍÆ²âµÄÍÁÈÀÊôĞÔÖµ
-	double PredictUncertainty;			// ÍÆ²â²»È·¶¨ĞÔ
-	double PredictCredibility;			// ÍÆ²â¿ÉĞÅ¶È
+	double PredictSoilVarible;			// æ¨æµ‹çš„åœŸå£¤å±æ€§å€¼
+	double PredictUncertainty;			// æ¨æµ‹ä¸ç¡®å®šæ€§
+	double PredictCredibility;			// æ¨æµ‹å¯ä¿¡åº¦
 
-	double Credibility;					// ÑùµãµÄ¿ÉĞÅ¶È
-	int Number_Support;					// Ö§³ÖÑùµãÊıÁ¿
-	int Number_Contradict;				// Ã¬¶ÜÑùµãÊıÁ¿
+	double Credibility;					// æ ·ç‚¹çš„å¯ä¿¡åº¦
+	int Number_Support;					// æ”¯æŒæ ·ç‚¹æ•°é‡
+	int Number_Contradict;				// çŸ›ç›¾æ ·ç‚¹æ•°é‡
 
-	int Density;						// ÃÜ¶È£¨Óë¸ÃµãÏàËÆ¶ÈÔÚãĞÖµÒÔÉÏµÄµãµÄÊıÁ¿£©
-	double DSimi;						// ±È¸ÃµãÃÜ¶È¸ü¸ßÇÒÓë¸Ãµã×îÏàËÆµÄµãµÄÏàËÆ¶È
+	int Density;						// å¯†åº¦ï¼ˆä¸è¯¥ç‚¹ç›¸ä¼¼åº¦åœ¨é˜ˆå€¼ä»¥ä¸Šçš„ç‚¹çš„æ•°é‡ï¼‰
+	double DSimi;						// æ¯”è¯¥ç‚¹å¯†åº¦æ›´é«˜ä¸”ä¸è¯¥ç‚¹æœ€ç›¸ä¼¼çš„ç‚¹çš„ç›¸ä¼¼åº¦
 
 public:
 	EnvUnit(void);

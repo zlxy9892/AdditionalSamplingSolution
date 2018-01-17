@@ -65,7 +65,7 @@ double Processing::CalcSimi(EnvUnit *e1, EnvUnit *e2)
 	double simi = -1;
 	if (!e1->IsCal || !e2->IsCal)
 	{
-		return -1;	// ²»²ÎÓë¼ÆËãµÄµã
+		return -1;	// ä¸å‚ä¸Žè®¡ç®—çš„ç‚¹
 	}
 	if (e1->EnvValues.size() == e2->EnvValues.size())
 	{

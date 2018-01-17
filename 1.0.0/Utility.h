@@ -16,7 +16,7 @@
 using namespace std;
 
 
-static boost::random::mt19937 rng(time(0));	// Ëæ»úÖÖ×Ó
+static boost::random::mt19937 rng(time(0));	// éšæœºç§å­
 
 class Utility
 {
@@ -26,9 +26,9 @@ public:
 	~Utility(void);
 
 	static string ConvertToString(double value);
-	static void ParseStr(string str, char c, vector<string>& tokens);	// ½âÎöÒÔcÎª·Ö¸ô·ûµÄÊı¾İ
+	static void ParseStr(string str, char c, vector<string>& tokens);	// è§£æä»¥cä¸ºåˆ†éš”ç¬¦çš„æ•°æ®
 	static vector<EnvUnit *> ReadCSV(string filename, EnvDataset *envDataset);
-	static vector<EnvUnit *> ReadCSV(string filename, EnvDataset *envDataset, string targetV, string idName);	// °üº¬¶ÁÈ¡Ä¿±êÍÁÈÀÊôĞÔĞÅÏ¢ºÍIDºÅ
+	static vector<EnvUnit *> ReadCSV(string filename, EnvDataset *envDataset, string targetV, string idName);	// åŒ…å«è¯»å–ç›®æ ‡åœŸå£¤å±æ€§ä¿¡æ¯å’ŒIDå·
 	static vector<EnvUnit *> ReadEnvDataFromCSV(string filename, int envCount);
 	static void WriteCSV(string filename, vector<EnvUnit *> envUnits);
 	static void WriteCSV2(string filename, vector<EnvUnit *> envUnits, vector<int> predictedAreaList);
@@ -36,9 +36,9 @@ public:
 	static void WriteEnvDataCSV(string filename, vector<EnvUnit *> envUnits);
 	static void ShowEnvUnit(vector<EnvUnit *> envUnits);
 
-	static EnvUnit* GetOneRandomEnvUnit(vector<EnvUnit *> envUnits);		// »ñÈ¡Ò»¸öËæ»úµÄ»·¾³µ¥Ôª(Õ¤¸ñ)
-	static vector<EnvUnit *> GetEnvUnitsByFactor(vector<EnvUnit *> envUnits, double factorVal);		// »ñÈ¡Ä³Ò»Ä¸ÖÊµÄ»·¾³µ¥Ôª
-	static vector<EnvUnit *> GetRandomEnvUnitsByFactor(vector<EnvUnit *> envUnits, double factorVal, int sampleCount);		// »ñÈ¡Ä³Ò»Ä¸ÖÊµÄÒ»¶¨ÊıÁ¿µÄËæ»ú»·¾³µ¥Ôª
+	static EnvUnit* GetOneRandomEnvUnit(vector<EnvUnit *> envUnits);		// è·å–ä¸€ä¸ªéšæœºçš„ç¯å¢ƒå•å…ƒ(æ …æ ¼)
+	static vector<EnvUnit *> GetEnvUnitsByFactor(vector<EnvUnit *> envUnits, double factorVal);		// è·å–æŸä¸€æ¯è´¨çš„ç¯å¢ƒå•å…ƒ
+	static vector<EnvUnit *> GetRandomEnvUnitsByFactor(vector<EnvUnit *> envUnits, double factorVal, int sampleCount);		// è·å–æŸä¸€æ¯è´¨çš„ä¸€å®šæ•°é‡çš„éšæœºç¯å¢ƒå•å…ƒ
 	static vector<EnvUnit *> GetStratifiedRandomSamples(vector<EnvUnit *> envUnits, double factorValList[], int sampleCountList[], int n);
 };
 
