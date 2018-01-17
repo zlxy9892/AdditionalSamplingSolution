@@ -46,12 +46,12 @@ int main(int argc, char *argv[])
 	cout<<"\nLoading data ...";
 	GDALAllRegister();
 	EnvDataset *envDataset = new EnvDataset();
-	//string dataDir = "../data/raffelson/";
+	//string dataDir = "../data/raffelson/covariables/";
 	//LoadData_raffelson(dataDir, envDataset);
-	string dataDir = "../data/heshan/envdata/";
-	LoadData_heshan(dataDir, envDataset);
-	//string dataDir = "../data/xc/";	
-	//LoadData_xc(dataDir, envDataset);
+	//string dataDir = "../data/heshan/envdata/covariables/";
+	//LoadData_heshan(dataDir, envDataset);
+	string dataDir = "../data/xc/covariables/";	
+	LoadData_xc(dataDir, envDataset);
 	cout<<"\nRead data OK!\n";
 
 	// set the hyperparameters
@@ -61,20 +61,20 @@ int main(int argc, char *argv[])
 	processing->unc_thred = 0.2;
 	processing->p_factor = 1.0;
 	processing->imporve_factor = 1.0;
-	int maxSampleNumber = 20;
+	int maxSampleNumber = 30;
 	processing->ShowParameters();
 
 	// set existed samples
-	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/existed_samples_40.csv", processing->EDS);
-	//processing->SampleEnvUnits = existedSamples;
+	vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/existed_samples_10.csv", processing->EDS);
+	processing->SampleEnvUnits = existedSamples;
 	//for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
 	//{ cout<<processing->SampleEnvUnits[i]->EnvValues[0]<<' '; }
 	//processing->ShowProcessInfo("../data/raffelson/add_samples_cluster_10_20.csv");
 	//processing->ShowProcessInfo("../data/raffelson/addSamples_5_20.csv");
 
 	// add additional samples
-	//processing->FindBestNewSampleListByObj(maxSampleNumber);
-	//Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+	processing->FindBestNewSampleListByObj(maxSampleNumber);
+	Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
 
 	// set different power factor of W1 (the ratio of the area can be predicted)
 	//processing->GetSampleListByDifferentPowerFactor(maxSampleNumber, 0.5, 1.5, 0.1);
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 	//processing->ShowProcessInfo("../data/raffelson/addSamples.csv");
 	//processing->ShowProcessInfo("../data/raffelson/compare/sss_25/sss5.csv");
 
-	Utility::WriteEnvDataCSV("envData_hs.csv", envDataset->EnvUnits);
+	//Utility::WriteEnvDataCSV("envData_hs.csv", envDataset->EnvUnits);
 
 	// read samples by kmeans algorithm
 	/*vector<EnvUnit *> samples_kmeans = Utility::ReadCSV("../data/raffelson/samples_kmeans/samples_kmeans_20_.csv", processing->EDS);

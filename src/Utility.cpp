@@ -72,6 +72,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 	}
 
 	// 根据x，y值读取样点信息
+	EnvUnit *e = nullptr;
 	while (getline(file, line))
 	{
 		vector<string> values;
@@ -80,7 +81,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 		const char *ystr = values[pos_Y].c_str();
 		double x = atof(xstr);
 		double y = atof(ystr);
-		EnvUnit *e = envDataset->GetEnvUnit(x, y);
+		e = envDataset->GetEnvUnit(x, y);
 		if (values.size() >= 3)
 		{
 			const char *valuestr = values[pos_value].c_str();
@@ -92,6 +93,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 			envUnits.push_back(e);
 		}
 	}
+	e = nullptr;
 	file.close();
 	return envUnits;
 }
@@ -144,6 +146,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset, str
 	}
 
 	// 根据x，y值读取样点信息
+	EnvUnit *e = nullptr;
 	while (getline(file, line))
 	{
 		vector<string> values;
@@ -155,7 +158,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset, str
 		double x = atof(xstr);
 		double y = atof(ystr);
 		double targetV = atof(targetVstr);
-		EnvUnit *e = envDataset->GetEnvUnit(x, y);
+		e = envDataset->GetEnvUnit(x, y);
 		if(e != NULL)
 		{
 			e->SoilVarible = targetV;
@@ -163,6 +166,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset, str
 			envUnits.push_back(e);
 		}
 	}
+	e = nullptr;
 	file.close();
 	return envUnits;
 }

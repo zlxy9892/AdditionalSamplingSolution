@@ -91,15 +91,17 @@ double Processing::CalcSimi(EnvUnit *e1, EnvUnit *e2)
 double Processing::CalcUncertainty(vector<EnvUnit *> samples, EnvUnit *e)
 {
 	double simi = 0;
+	EnvUnit *se = nullptr;
 	for (int i = 0; i < samples.size(); ++i)
 	{
-		EnvUnit *se = samples[i];
+		se = samples[i];
 		double simi_temp = this->CalcSimi(se, e);
 		if (simi < simi_temp)
 		{
 			simi = simi_temp;
 		}
 	}
+	se = nullptr;
 	return 1-simi;
 }
 
@@ -107,14 +109,16 @@ int Processing::CalcCanPredictArea(double thred_unc)
 {
 	int area = 0;
 	int count = this->EDS->EnvUnits.size();
+	EnvUnit *e = nullptr;
 	for (int i = 0; i < count; ++i)
 	{
-		EnvUnit *e = this->EDS->EnvUnits[i];
+		e = this->EDS->EnvUnits[i];
 		if (e->IsCal && e->Uncertainty <= thred_unc)
 		{
 			area++;
 		}
 	}
+	e = nullptr;
 	return area;
 }
 
@@ -122,14 +126,16 @@ int Processing::CalcCanPredictAreaByUncTmp()
 {
 	int area = 0;
 	int count = this->EDS->EnvUnits.size();
+	EnvUnit *e = nullptr;
 	for (int i = 0; i < count; ++i)
 	{
-		EnvUnit *e = this->EDS->EnvUnits[i];
+		e = this->EDS->EnvUnits[i];
 		if (e->IsCal && e->Uncertainty_tmp <= this->unc_thred)
 		{
 			area++;
 		}
 	}
+	e = nullptr;
 	return area;
 }
 
@@ -142,9 +148,10 @@ double Processing::CalcCanPredictAreaProportion( double thred_unc )
 void Processing::RefreshUncertainty( vector<EnvUnit *> samples )
 {
 	int count = this->EDS->EnvUnits.size();
+	EnvUnit *e = nullptr;
 	for (int i = 0; i < count; ++i)
 	{
-		EnvUnit *e = this->EDS->EnvUnits[i];
+		e = this->EDS->EnvUnits[i];
 		if (e->IsCal)
 		{
 			e->Uncertainty = this->CalcUncertainty(samples, e);
@@ -154,14 +161,16 @@ void Processing::RefreshUncertainty( vector<EnvUnit *> samples )
 			e->Uncertainty = 1;
 		}
 	}
+	e = nullptr;
 }
 
 void Processing::RefreshUncertainty()
 {
 	int count = this->EDS->EnvUnits.size();
+	EnvUnit *e = nullptr;
 	for (int i = 0; i < count; ++i)
 	{
-		EnvUnit *e = this->EDS->EnvUnits[i];
+		e = this->EDS->EnvUnits[i];
 		if (e->IsCal)
 		{
 			e->Uncertainty = this->CalcUncertainty(this->SampleEnvUnits, e);
@@ -171,6 +180,7 @@ void Processing::RefreshUncertainty()
 			e->Uncertainty = 1;
 		}
 	}
+	e = nullptr;
 }
 
 void Processing::RefreshUncertainty_Parallel()
@@ -188,6 +198,7 @@ void Processing::RefreshUncertainty_Parallel()
 		{
 			e->Uncertainty = 1;
 		}
+		e = nullptr;
 	}
 }
 
@@ -216,15 +227,17 @@ void Processing::RefreshUncertaintyTmpByNewSample( EnvUnit* newSample )
 		{
 			e->Uncertainty = 1;
 		}
+		e = nullptr;
 	}
 }
 
 void Processing::RefreshIsCanPredict()
 {
 	int count = this->EDS->EnvUnits.size();
+	EnvUnit *e = nullptr;
 	for (int i = 0; i < count; ++i)
 	{
-		EnvUnit *e = this->EDS->EnvUnits[i];
+		e = this->EDS->EnvUnits[i];
 		if (e->IsCal)
 		{
 			if (e->Uncertainty <= this->unc_thred /*this->unc_thred_min*/)
@@ -241,20 +254,23 @@ void Processing::RefreshIsCanPredict()
 			e->isCanPredict = false;
 		}
 	}
+	e = nullptr;
 }
 
 double Processing::CalcUncertainty_Sum()
 {
 	double unc_sum = 0;
 	int count = this->EDS->EnvUnits.size();
+	EnvUnit *e = nullptr;
 	for (int i = 0; i < count; ++i)
 	{
-		EnvUnit *e = this->EDS->EnvUnits[i];
+		e = this->EDS->EnvUnits[i];
 		if (e->IsCal)
 		{
 			unc_sum += e->Uncertainty;
 		}
 	}
+	e = nullptr;
 	return unc_sum;
 }
 
@@ -272,6 +288,7 @@ double Processing::CalcUncertaintyTmp_Sum()
 			{
 				unc_sum += e->Uncertainty_tmp;
 			}
+			e = nullptr;
 		}
 	}
 	return unc_sum;

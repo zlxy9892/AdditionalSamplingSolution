@@ -12,7 +12,7 @@ set(GDAL_LIBRARIES gdal_i.lib)
 include_directories(${GDAL_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS})
 link_directories(${GDAL_LIBRARY_DIRS} ${BOOST_LIBRARY_DIRS})
 
-aux_source_directory(. DIR_SRCS)
+aux_source_directory(./src DIR_SRCS)
 
 file(GLOB_RECURSE CURRENT_HEADERS  *.h *.hpp)
 source_group("Header Files" FILES ${CURRENT_HEADERS})

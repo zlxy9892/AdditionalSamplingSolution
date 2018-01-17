@@ -47,15 +47,17 @@ void EnvDataset::RefreshAll()
 void EnvDataset::RefreshCalArea()
 {
 	this->CalcArea = 0;
+	EnvUnit *e = nullptr;
 	int envUnitCount = this->Setting->Width*this->Setting->Height;
 	for(int i = 0; i < envUnitCount; i++)
 	{
-		EnvUnit *e = this->EnvUnits[i];
+		e = this->EnvUnits[i];
 		if(e->IsCal)
 		{
 			this->CalcArea++;
 		}
 	}
+	e = nullptr;
 }
 
 void EnvDataset::RefreshEnvUnits()
