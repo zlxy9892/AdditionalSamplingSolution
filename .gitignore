@@ -28,7 +28,6 @@
 # Executables
 bin
 build
-data
 *.exe
 *.out
 *.app
@@ -38,6 +37,10 @@ data
 .idea
 cmake-build*/
 build*/
+
+# data
+data
+*.csv
 
 # output folders
 **OUTPUT
@@ -55,4 +58,3 @@ doc/html
 doc/img/
 #nfs files on linux
 .nfs*
-

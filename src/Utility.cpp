@@ -29,6 +29,78 @@ void Utility::ParseStr( string str, char c, vector<string>& tokens ) {
 	}
 }
 
+vector<EnvUnit *> Utility::ReadTable(string filename, EnvDataset *envDataset, string targetVName, string idName)    // 包含读取目标土壤属性信息和ID号
+{
+	vector<EnvUnit *> envUnits;
+	ifstream file(filename); // declare file stream:
+
+	// 处理第一行，获取X,Y属性、土壤属性值名称、样点ID号在文件中的列数位置
+	string line;
+	getline(file, line);
+	vector<string> names;
+	int pos_X = 0;
+	int pos_Y = 1;
+	int pos_targetVName = 2;
+	int pos_idName = 0;
+	Utility::ParseStr(line, ',', names);
+	for (int i = 0; i < names.size(); i++) {
+		if (names[i] == "X" || names[i] == "x") {
+			pos_X = i;
+			break;
+		}
+	}
+	for (int i = 0; i < names.size(); i++) {
+		if (names[i] == "Y" || names[i] == "y") {
+			pos_Y = i;
+			break;
+		}
+	}
+	if (targetVName != "None") {
+		for (int i = 0; i < names.size(); i++) {
+			if (names[i] == targetVName) {
+				pos_targetVName = i;
+				break;
+			}
+		}
+	}
+	if (idName != "None") {
+		for (int i = 0; i < names.size(); i++) {
+			if (names[i] == idName) {
+				pos_idName = i;
+				break;
+			}
+		}
+	}
+
+	// 根据x，y值读取样点信息
+	while (getline(file, line)) {
+		vector<string> values;
+		Utility::ParseStr(line, ',', values);
+		const char *xstr = values[pos_X].c_str();
+		const char *ystr = values[pos_Y].c_str();
+		double x = atof(xstr);
+		double y = atof(ystr);
+
+		double targetV = 0.0;
+		if (targetVName != "None") {
+			const char *targetVstr = values[pos_targetVName].c_str();
+			targetV = atof(targetVstr);
+		}
+		string id = "";
+		if (idName != "None") {
+			id = values[pos_idName];
+		}
+		EnvUnit *e = envDataset->GetEnvUnit(x, y);
+		if (e != NULL) {
+			if (targetVName != "None") { e->SoilVarible = targetV; }
+			if (idName != "None") { e->SampleID = id; }
+			envUnits.push_back(e);
+		}
+	}
+	file.close();
+	return envUnits;
+}
+
 vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 {
 	vector<EnvUnit*> envUnits;
@@ -358,9 +430,9 @@ void Utility::ShowEnvUnit( vector<EnvUnit *> envUnits )
 	cout<<"x,y\n";
 	for (int i = 0; i < envUnits.size(); i++)
 	{
-		double x = envUnits[i]->Loc->X + cellSize / 2;
-		double y = envUnits[i]->Loc->Y - cellSize / 2;
-		cout<<std::fixed<<setprecision(0)<<x<<","<<y<<"\n";
+		double x = envUnits[i]->Loc->X + cellSize / 2.0;
+		double y = envUnits[i]->Loc->Y - cellSize / 2.0;
+		cout<<std::fixed<<setprecision(3)<<x<<","<<y<<"\n";
 	}
 }
 
@@ -392,4 +464,38 @@ vector<EnvUnit *> Utility::ReadEnvDataFromCSV( string filename, int envCount )
 	}
 	file.close();
 	return envUnits;
+}
+
+void Utility::ShowSampleNumberForEachStrata(vector<EnvUnit *> envUnits, int sampleCount)
+{
+	vector<double> factorValList;
+	int count = envUnits.size();
+	int calCount = 0;
+	for (int i = 0; i < count; i++)
+	{
+		if (!envUnits[i]->IsCal)
+		{
+			continue;
+		}
+		calCount += 1;
+		double factorVal = envUnits[i]->EnvValues[0];
+		vector<double>::iterator it = find(factorValList.begin(), factorValList.end(), factorVal);
+		if (it != factorValList.end())
+		{
+			continue;
+		}
+		else
+		{
+			factorValList.push_back(factorVal);
+		}
+	}
+	sort(factorValList.begin(), factorValList.end());
+	for (int i = 0; i < factorValList.size(); i++)
+	{
+		double prop = 1.0 * Utility::GetEnvUnitsByFactor(envUnits, factorValList[i]).size() / calCount;
+		double samplesize_float = prop*sampleCount;
+		int samplesize = round(samplesize_float);
+		cout << factorValList[i] << "\t" << prop << "\t" << samplesize;
+		cout << "\n";
+	}
 }

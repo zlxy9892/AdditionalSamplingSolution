@@ -56,10 +56,11 @@ public:
 	double ObjectFunction();															// 计算目标函数
 	double ObjectFunction(double thred_unc);											// 计算目标函数（在某一不确定性约束下的结果值）
 	double ObjectFunctionByNewSample(EnvUnit *newSample);								// 计算目标函数
-	EnvUnit* FindBestNewSampleByObj();
-	vector<EnvUnit*> FindBestNewSampleListByObj(int newSampleCount);
+	EnvUnit* FindBestNewSampleByObj(int step = 1);
+	vector<EnvUnit*> FindBestNewSampleListByObj(int newSampleCount, int step = 1);
 	void UpdateUncertaintyThred();
 	void UpdateWeights();
+	EnvUnit* GetMostSimiSample(vector<EnvUnit *> samples, EnvUnit *e);
 
 	vector<EnvUnit *> ConstraintKmeansClustering(vector<EnvUnit *> envUnits, vector<EnvUnit *> existedSamples, int newSampleCount);
 

@@ -30,6 +30,7 @@ public:
 	static vector<EnvUnit *> ReadCSV(string filename, EnvDataset *envDataset);
 	static vector<EnvUnit *> ReadCSV(string filename, EnvDataset *envDataset, string targetV, string idName);	// 包含读取目标土壤属性信息和ID号
 	static vector<EnvUnit *> ReadEnvDataFromCSV(string filename, int envCount);
+	static vector<EnvUnit *> ReadTable(string filename, EnvDataset *envDataset, string targetVName = "None", string idName = "None");
 	static void WriteCSV(string filename, vector<EnvUnit *> envUnits);
 	static void WriteCSV2(string filename, vector<EnvUnit *> envUnits, vector<int> predictedAreaList);
 	static void WriteCSV_Temp(string filename, vector<EnvUnit *> envUnits);
@@ -40,6 +41,7 @@ public:
 	static vector<EnvUnit *> GetEnvUnitsByFactor(vector<EnvUnit *> envUnits, double factorVal);		// 获取某一母质的环境单元
 	static vector<EnvUnit *> GetRandomEnvUnitsByFactor(vector<EnvUnit *> envUnits, double factorVal, int sampleCount);		// 获取某一母质的一定数量的随机环境单元
 	static vector<EnvUnit *> GetStratifiedRandomSamples(vector<EnvUnit *> envUnits, double factorValList[], int sampleCountList[], int n);
+	static void ShowSampleNumberForEachStrata(vector<EnvUnit *> envUnits, int sampleCount);
 };
 
 #endif

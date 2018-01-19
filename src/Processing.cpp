@@ -354,14 +354,45 @@ double Processing::ObjectFunctionByNewSample( EnvUnit *newSample )
 	return o;
 }
 
-EnvUnit* Processing::FindBestNewSampleByObj()
+EnvUnit* Processing::FindBestNewSampleByObj(int step)
 {
-	EnvUnit *sample_best = NULL;
-	EnvUnit *sample_tmp = NULL;
+	EnvUnit *sample_best = nullptr;
+	EnvUnit *sample_tmp = nullptr;
 	double obj_min = 9999;
 	int segementCount = 1000;
 	int count = this->EDS->EnvUnits.size();
-	for (int i = 0; i < count; ++i)
+
+	int rowCount = this->EDS->Setting->Height;
+	int colCount = this->EDS->Setting->Width;
+	int i = 0;
+	for (int row = 0; row < rowCount; row += step)
+	{
+		for (int col = 0; col < colCount; col += step)
+		{
+			i = row * colCount + col;
+			if (i % (count / segementCount) == 0)
+			{
+				cout << '\r';
+				cout << "Completed " << setw(5) << (int((i*1.0 / count + 0.5 / segementCount)*segementCount)) / (segementCount / 100.0) << "%";
+			}
+			sample_tmp = this->EDS->EnvUnits[i];
+			if (sample_tmp->IsCal && sample_tmp->isCanPredict == false)
+			{
+				double obj = this->ObjectFunctionByNewSample(sample_tmp);
+				if (obj_min > obj)
+				{
+					obj_min = obj;
+					sample_best = sample_tmp;
+				}
+			}
+		}
+	}
+
+	sample_tmp = nullptr;
+	cout << '\n';
+	return sample_best;
+
+	/*for (int i = 0; i < count; i+=step)
 	{
 		if(i % (count/segementCount) == 0)
 		{
@@ -379,11 +410,12 @@ EnvUnit* Processing::FindBestNewSampleByObj()
 			}
 		}
 	}
+	sample_tmp = nullptr;
 	cout<<'\n';
-	return sample_best;
+	return sample_best;*/
 }
 
-vector<EnvUnit*> Processing::FindBestNewSampleListByObj(int newSampleCount)
+vector<EnvUnit*> Processing::FindBestNewSampleListByObj(int newSampleCount, int step)
 {
 	for (int i = 0; i < newSampleCount; i++)
 	{
@@ -391,7 +423,7 @@ vector<EnvUnit*> Processing::FindBestNewSampleListByObj(int newSampleCount)
 		this->RefreshIsCanPredict();
 		this->UpdateUncertaintyThred();		// update the unc_thred with the itheration (key step)
 		this->UpdateWeights();				// update w1 and w2 with the itheration (key step)
-		EnvUnit *bestSample = this->FindBestNewSampleByObj();
+		EnvUnit *bestSample = this->FindBestNewSampleByObj(step);
 		if(bestSample == NULL)
 		{
 			cout<<"no suitable sample can be found.\n";
@@ -573,8 +605,8 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		//cout<<"O2:\t"<<o2<<"\n";
 		//cout<<"W1:\t"<<this->w1<<"\n";
 		//cout<<"W2:\t"<<this->w2<<"\n";
-		cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
-		//cout<<"can_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
+		//cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
+		cout<<"sample_size:\t"<<this->SampleEnvUnits.size()<<"\tcan_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
 		//cout<<"pred_class_accuracy:\t"<<this->CalcPredictClassAccuracy()<<"\n";
 	}
 }
@@ -593,14 +625,16 @@ double Processing::CalcPredictClassAccuracy()
 {
 	double acc = 0;
 	this->PredictClass(this->ValidateSampleEnvUnits);
+	EnvUnit *ve = nullptr;
 	for (int i = 0; i < this->ValidateSampleEnvUnits.size(); i++)
 	{
-		EnvUnit *ve = this->ValidateSampleEnvUnits[i];
+		ve = this->ValidateSampleEnvUnits[i];
 		if (ve->PredictSoilVarible == ve->SoilVarible)
 		{
 			acc += 1.0;
 		}
 	}
+	ve = nullptr;
 	acc = 1.0 * acc / this->ValidateSampleEnvUnits.size();
 	return acc;
 }
@@ -628,4 +662,23 @@ vector<EnvUnit *> Processing::ConstraintKmeansClustering( vector<EnvUnit *> envU
 {
 	vector<EnvUnit *> aa;
 	return aa;
+}
+
+EnvUnit* Processing::GetMostSimiSample(vector<EnvUnit *> samples, EnvUnit *e)
+{
+	EnvUnit *sample_mostsimi = nullptr;
+	double simi_max = 0.0;
+	for (int i = 0; i < samples.size(); i++)
+	{
+		double simi_tmp = this->CalcSimi(samples[i], e);
+		if (simi_max < simi_tmp)
+		{
+			sample_mostsimi = samples[i];
+			simi_max = simi_tmp;
+		}
+	}
+	//cout << simi_max << "\n";
+	setprecision(3);
+	cout << std::fixed << sample_mostsimi->Loc->X << "," << sample_mostsimi->Loc->Y <<","<< sample_mostsimi->SoilVarible << "\n";
+	return sample_mostsimi;
 }
