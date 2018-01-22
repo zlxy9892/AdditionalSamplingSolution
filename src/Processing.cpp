@@ -346,7 +346,7 @@ double Processing::ObjectFunctionByNewSample( EnvUnit *newSample )
 	double totalArea = this->EDS->CalcArea;
 	//double unc_sum = this->CalcUncertainty_Sum();
 	double unc_sum = this->CalcUncertaintyTmp_Sum();
-	double o1 = 1.0 - 1.0 * canPreArea / totalArea;
+	double o1 = 1.0 - (1.0 * canPreArea / totalArea);
 	double o2 = 1.0 * unc_sum / totalArea;
 	//cout<<o1<<"\t"<<o2<<"\n";
 	o = this->w1 * o1 + this->w2 * o2;
@@ -423,6 +423,8 @@ vector<EnvUnit*> Processing::FindBestNewSampleListByObj(int newSampleCount, int 
 		this->RefreshIsCanPredict();
 		this->UpdateUncertaintyThred();		// update the unc_thred with the itheration (key step)
 		this->UpdateWeights();				// update w1 and w2 with the itheration (key step)
+		//this->w1 = 0.0;
+		//this->w2 = 1.0;
 		EnvUnit *bestSample = this->FindBestNewSampleByObj(step);
 		if(bestSample == NULL)
 		{
@@ -598,7 +600,7 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		//cout<<"\n-------------------------------------\n";
 		//Utility::ShowEnvUnit(this->SampleEnvUnits);
 		//cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
-		//cout<<"unc_mean:\t"<<this->CalcUncertainty_Sum() / this->EDS->CalcArea<<"\n";
+		cout << "sample_size:\t" << this->SampleEnvUnits.size() << "unc_mean:\t" << this->CalcUncertainty_Sum() / this->EDS->CalcArea << "\n";
 		//cout<<"unc_thred:\t"<<this->unc_thred<<"\n";
 		//cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
 		//cout<<"O1:\t"<<o1<<"\n";
@@ -606,7 +608,7 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		//cout<<"W1:\t"<<this->w1<<"\n";
 		//cout<<"W2:\t"<<this->w2<<"\n";
 		//cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
-		cout<<"sample_size:\t"<<this->SampleEnvUnits.size()<<"\tcan_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
+		//cout<<"sample_size:\t"<<this->SampleEnvUnits.size()<<"\tcan_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
 		//cout<<"pred_class_accuracy:\t"<<this->CalcPredictClassAccuracy()<<"\n";
 	}
 }

@@ -65,15 +65,14 @@ int main(int argc, char *argv[])
 	processing->ShowParameters();
 
 	// set existed samples
-	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/samples_designed/existed_samples_10.csv", processing->EDS);
-	vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/samples_designed/add_samples_sss_10_30_5.csv", processing->EDS);
+	vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/samples_designed/existed_samples_10.csv", processing->EDS);
+	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/samples_designed/add_samples_sss_10_30_5.csv", processing->EDS);
 	//vector<EnvUnit*> existedSamples = Utility::ReadTable("../data/xc/samples_designed/add_samples_mymethod_10_30.csv", processing->EDS);
-	processing->ValidateSampleEnvUnits = Utility::ReadTable("../data/xc/samples_validation.csv", envDataset, "shaliB");
+	//vector<EnvUnit*> existedSamples = Utility::ReadTable("../data/xc/samples_designed/add_samples_oldmethod_10_30.csv", processing->EDS);
+	processing->ValidateSampleEnvUnits = Utility::ReadTable("../data/xc/samples_validation.csv", envDataset, "SOMA");
 	processing->SampleEnvUnits = existedSamples;
-	for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
-	{
-		processing->GetMostSimiSample(processing->ValidateSampleEnvUnits, processing->SampleEnvUnits[i]);
-	}
+	//for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
+	//{ processing->GetMostSimiSample(processing->ValidateSampleEnvUnits, processing->SampleEnvUnits[i]); }
 	
 	//for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
 	//{ cout<<processing->SampleEnvUnits[i]->EnvValues[0]<<' '; }
@@ -81,10 +80,11 @@ int main(int argc, char *argv[])
 	//processing->ShowProcessInfo("../data/raffelson/samples_designed/add_samples_cluster_10_20.csv");
 	//processing->ShowProcessInfo("../data/xc/samples_designed/add_samples_mymethod_10_30.csv");
 	//processing->ShowProcessInfo("../data/xc/samples_designed/add_samples_sss_10_30_5.csv");
+	//processing->ShowProcessInfo("../data/raffelson/samples_designed/add_samples_oldmethod_25.csv");
 
 	// add additional samples
-	//processing->FindBestNewSampleListByObj(maxSampleNumber, 4);
-	//Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+	processing->FindBestNewSampleListByObj(maxSampleNumber, 4);
+	Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
 
 	// set different power factor of W1 (the ratio of the area can be predicted)
 	//processing->GetSampleListByDifferentPowerFactor(maxSampleNumber, 0.5, 1.5, 0.1);

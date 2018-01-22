@@ -34,9 +34,9 @@ X = np.array(X)
 
 # load training set
 #for training set
-value = 'shaliB'
+value = 'SOMA'
 #train_loc_fn = './data/dtrain_mymethod.csv'
-train_loc_fn = './data/dtrain_sss_5.csv'
+train_loc_fn = './data/dtrain_soma_sss_3.csv'
 train_loc = np.array(pd.read_csv(train_loc_fn))[:,0:2]
 train_index = getNearestElemsIds(df, train_loc)
 X_train = X[train_index]
