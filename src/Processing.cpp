@@ -600,7 +600,7 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		//cout<<"\n-------------------------------------\n";
 		//Utility::ShowEnvUnit(this->SampleEnvUnits);
 		//cout<<"unc_sum:\t"<<this->CalcUncertainty_Sum()<<"\n";
-		cout << "sample_size:\t" << this->SampleEnvUnits.size() << "unc_mean:\t" << this->CalcUncertainty_Sum() / this->EDS->CalcArea << "\n";
+		//cout << "sample_size:\t" << this->SampleEnvUnits.size() << "\tunc_mean:\t" << this->CalcUncertainty_Sum() / this->EDS->CalcArea << "\n";
 		//cout<<"unc_thred:\t"<<this->unc_thred<<"\n";
 		//cout<<"Obj:\t"<<this->ObjectFunction()<<"\n";
 		//cout<<"O1:\t"<<o1<<"\n";
@@ -608,8 +608,8 @@ void Processing::ShowProcessInfo( string sampleFilename )
 		//cout<<"W1:\t"<<this->w1<<"\n";
 		//cout<<"W2:\t"<<this->w2<<"\n";
 		//cout<<"can_pred_area_0.1:\t"<<this->CalcCanPredictAreaProportion(0.1)<<"\n";
-		//cout<<"sample_size:\t"<<this->SampleEnvUnits.size()<<"\tcan_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
-		//cout<<"pred_class_accuracy:\t"<<this->CalcPredictClassAccuracy()<<"\n";
+		cout<<"sample_size:\t"<<this->SampleEnvUnits.size()<<"\tcan_pred_area_0.2:\t"<<this->CalcCanPredictAreaProportion(0.2)<<"\n";
+		//cout << "sample_size:\t" << this->SampleEnvUnits.size() << "\tpred_class_accuracy:\t" << this->CalcPredictClassAccuracy() << "\n";
 	}
 }
 
@@ -681,6 +681,7 @@ EnvUnit* Processing::GetMostSimiSample(vector<EnvUnit *> samples, EnvUnit *e)
 	}
 	//cout << simi_max << "\n";
 	setprecision(3);
-	cout << std::fixed << sample_mostsimi->Loc->X << "," << sample_mostsimi->Loc->Y <<","<< sample_mostsimi->SoilVarible << "\n";
+	double cellSize = e->CellSize;
+	cout << std::fixed << sample_mostsimi->Loc->X + cellSize / 2.0 << "," << sample_mostsimi->Loc->Y - cellSize / 2.0 << "," << sample_mostsimi->SoilVarible << "\n";
 	return sample_mostsimi;
 }

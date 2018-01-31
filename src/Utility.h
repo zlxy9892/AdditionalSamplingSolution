@@ -17,6 +17,7 @@ using namespace std;
 
 
 static boost::random::mt19937 rng(time(0));	// 随机种子
+//static boost::random::mt19937 rng(1000000);	// 随机种子
 
 class Utility
 {

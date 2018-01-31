@@ -46,10 +46,10 @@ int main(int argc, char *argv[])
 	cout<<"\nLoading data ...";
 	GDALAllRegister();
 	EnvDataset *envDataset = new EnvDataset();
-	//string dataDir = "../data/raffelson/covariables/";
-	//LoadData_raffelson(dataDir, envDataset);
 	//string dataDir = "../data/heshan/envdata/covariables/";
 	//LoadData_heshan(dataDir, envDataset);
+	//string dataDir = "../data/raffelson/covariables/";
+	//LoadData_raffelson(dataDir, envDataset);
 	string dataDir = "../data/xc/covariables/";	
 	LoadData_xc(dataDir, envDataset);
 	cout<<"\nRead data OK!\n";
@@ -61,30 +61,40 @@ int main(int argc, char *argv[])
 	processing->unc_thred = 0.2;
 	processing->p_factor = 1.0;
 	processing->imporve_factor = 1.0;
-	int maxSampleNumber = 30;
+	int maxSampleNumber = 10;
 	processing->ShowParameters();
 
+	// set validation samples
+	processing->ValidateSampleEnvUnits = Utility::ReadTable("../data/xc/samples_designed/samples_validation.csv", envDataset, "SOMA");
+	//processing->ValidateSampleEnvUnits = Utility::ReadTable("../data/raffelson/envdata_raf.csv", envDataset, "soiltype");
+
 	// set existed samples
-	vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/samples_designed/existed_samples_10.csv", processing->EDS);
-	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/samples_designed/add_samples_sss_10_30_5.csv", processing->EDS);
+	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/raffelson/samples_designed/existed_samples_5.csv", processing->EDS);
+	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/raffelson/samples_designed/add_samples_mymethod_5_20.csv", processing->EDS);
+	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/raffelson/samples_designed/add_samples_oldmethod_5_20.csv", processing->EDS);
+	//vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/raffelson/samples_designed/add_samples_sss_5_20_1.csv", processing->EDS);
+
 	//vector<EnvUnit*> existedSamples = Utility::ReadTable("../data/xc/samples_designed/add_samples_mymethod_10_30.csv", processing->EDS);
 	//vector<EnvUnit*> existedSamples = Utility::ReadTable("../data/xc/samples_designed/add_samples_oldmethod_10_30.csv", processing->EDS);
-	processing->ValidateSampleEnvUnits = Utility::ReadTable("../data/xc/samples_validation.csv", envDataset, "SOMA");
+	vector<EnvUnit*> existedSamples = Utility::ReadCSV("../data/xc/samples_designed/add_samples_sss_10_30_4.csv", processing->EDS);
 	processing->SampleEnvUnits = existedSamples;
-	//for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
-	//{ processing->GetMostSimiSample(processing->ValidateSampleEnvUnits, processing->SampleEnvUnits[i]); }
+	for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
+	{ processing->GetMostSimiSample(processing->ValidateSampleEnvUnits, processing->SampleEnvUnits[i]); }
 	
 	//for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
 	//{ cout<<processing->SampleEnvUnits[i]->EnvValues[0]<<' '; }
 	//Utility::ShowSampleNumberForEachStrata(processing->EDS->EnvUnits, 40);
 	//processing->ShowProcessInfo("../data/raffelson/samples_designed/add_samples_cluster_10_20.csv");
+	//processing->ShowProcessInfo("../data/raffelson/samples_designed/add_samples_mymethod_5_20.csv");
+	//processing->ShowProcessInfo("../data/raffelson/samples_designed/add_samples_oldmethod_5_20.csv");
+	//processing->ShowProcessInfo("../data/raffelson/samples_designed/add_samples_sss_5_20_4.csv");
 	//processing->ShowProcessInfo("../data/xc/samples_designed/add_samples_mymethod_10_30.csv");
-	//processing->ShowProcessInfo("../data/xc/samples_designed/add_samples_sss_10_30_5.csv");
-	//processing->ShowProcessInfo("../data/raffelson/samples_designed/add_samples_oldmethod_25.csv");
+	//processing->ShowProcessInfo("../data/xc/samples_designed/add_samples_oldmethod_10_30.csv");
+	//processing->ShowProcessInfo("../data/xc/samples_designed/add_samples_sss_10_30_1.csv");
 
 	// add additional samples
-	processing->FindBestNewSampleListByObj(maxSampleNumber, 4);
-	Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
+	//processing->FindBestNewSampleListByObj(maxSampleNumber, 4);
+	//Utility::WriteCSV("./addSamples.csv", processing->SampleEnvUnits);
 
 	// set different power factor of W1 (the ratio of the area can be predicted)
 	//processing->GetSampleListByDifferentPowerFactor(maxSampleNumber, 0.5, 1.5, 0.1);
@@ -110,13 +120,15 @@ int main(int argc, char *argv[])
 	
 	// get stratified random samples
 	/*double factorList[5] = {1.0, 2.0, 3.0, 4.0, 5.0};
-	int sampleCountList[5] = {6, 3, 5, 4, 7};
-	int sampleCountList[5] = {1, 1, 1, 1, 1};
+	int sampleCountList[5] = {5, 2, 4, 3, 6};
 	vector<EnvUnit*> stratifiedRandomSamples = Utility::GetStratifiedRandomSamples(envDataset->EnvUnits, factorList, sampleCountList, 5);
 	processing->SampleEnvUnits = stratifiedRandomSamples;
+	processing->SampleEnvUnits.insert(processing->SampleEnvUnits.end(), stratifiedRandomSamples.begin(), stratifiedRandomSamples.end());
 	processing->RefreshUncertainty();
 	cout<<processing->CalcUncertainty_Sum()<<"\n";
-	Utility::ShowEnvUnit(processing->SampleEnvUnits);*/
+	for (int i = 0; i < processing->SampleEnvUnits.size(); i++)
+	{ processing->GetMostSimiSample(processing->ValidateSampleEnvUnits, processing->SampleEnvUnits[i]); }*/
+
 	/*double factorList[8] = { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 };
 	int sampleCountList[8] = { 3, 1, 4, 4, 0, 11, 5, 2 };
 	vector<EnvUnit*> stratifiedRandomSamples = Utility::GetStratifiedRandomSamples(envDataset->EnvUnits, factorList, sampleCountList, 8);

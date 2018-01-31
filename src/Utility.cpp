@@ -107,6 +107,7 @@ vector<EnvUnit *> Utility::ReadCSV( string filename, EnvDataset *envDataset )
 	ifstream file(filename); // declare file stream:
 	if (!file.is_open())
 	{
+		cout << "Failed to read file.\n";
 		return envUnits;
 	}
 
